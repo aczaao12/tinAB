@@ -1,6 +1,6 @@
 # Ứng Dụng Ôn Tập Trắc Nghiệm Tin Học (tinAB)
 
-Web ôn tập trắc nghiệm siêu nhẹ (Super MVP), xây dựng bằng **Svelte 5 + TypeScript + Vite**, thuần Client-side (không cần backend, không cần database), lưu lịch sử bài làm trên **LocalStorage** và tương thích hoàn hảo để host trực tiếp trên **GitHub Pages**.
+Web ôn tập trắc nghiệm siêu nhẹ (Super MVP), xây dựng bằng **React 19 + TypeScript + Vite**, thuần Client-side (không cần backend, không cần database), lưu lịch sử bài làm trên **LocalStorage** và tương thích hoàn hảo để host trực tiếp trên **GitHub Pages**.
 
 ---
 
