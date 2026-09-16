@@ -67,6 +67,9 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
     // Minimum swipe threshold of 45px and predominantly horizontal
     if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+      try {
+        localStorage.setItem('tinab_seen_swipe_hint', 'true');
+      } catch {}
       if (deltaX < 0 && canNext) {
         // Swiped left -> Next
         onNext();
@@ -152,6 +155,19 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       {/* Scrollable Stage Content Body */}
       <div className="stage-content-scroll">
+        {/* Mobile-Only Swipe Indicator Cue */}
+        <div className="mobile-only flex items-center justify-between text-[11px] font-medium text-slate-400 dark:text-slate-500 mb-2 px-1 select-none">
+          <span className="flex items-center gap-1 opacity-70">
+            {canPrev ? '‹ Vuốt sang phải' : ''}
+          </span>
+          <span className="flex items-center gap-1 opacity-60">
+            <span className="inline-block animate-swipe-lr">‹ Vuốt chuyển câu ›</span>
+          </span>
+          <span className="flex items-center gap-1 opacity-70">
+            {canNext ? 'Vuốt sang trái ›' : ''}
+          </span>
+        </div>
+
         {/* Question Prompt */}
         <h2 className="question-heading">{question.prompt}</h2>
 

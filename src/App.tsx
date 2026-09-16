@@ -19,6 +19,7 @@ import { HistoryModal } from './components/HistoryModal';
 import { ExamResultModal } from './components/ExamResultModal';
 import { MobileTestSheet } from './components/MobileTestSheet';
 import { MobileMenuSheet } from './components/MobileMenuSheet';
+import { SwipeHint } from './components/SwipeHint';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -668,6 +669,9 @@ export const App: React.FC = () => {
         onToggleTheme={handleToggleTheme}
         onClose={() => setIsMobileMenuSheetOpen(false)}
       />
+
+      {/* Mobile Swipe Gesture Tutorial / Hint Notification */}
+      <SwipeHint />
 
       {/* Desktop & Mobile Modals */}
       <NameModal

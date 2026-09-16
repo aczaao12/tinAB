@@ -197,3 +197,13 @@ export const IconBookOpen: React.FC<IconProps> = ({ size = 18, color = 'currentC
   </svg>
 );
 
+export const IconSwipeGesture: React.FC<IconProps> = ({ size = 24, color = 'currentColor', style }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
+    <path d="M6 8L2 12l4 4" />
+    <path d="M18 8l4 4-4 4" />
+    <circle cx="12" cy="12" r="3" />
+    <line x1="6" y1="12" x2="9" y2="12" strokeDasharray="2 2" />
+    <line x1="15" y1="12" x2="18" y2="12" strokeDasharray="2 2" />
+  </svg>
+);
+
