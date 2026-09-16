@@ -1,7 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { TEST_SUITES } from './data/testsData';
 import type { Question, UserAnswer, AttemptRecord } from './data/types';
-import { getUserName, setUserName, getAttempts, saveAttempt } from './utils/storage';
+import {
+  getUserName,
+  setUserName,
+  getAttempts,
+  saveAttempt,
+  saveQuizSession,
+  getQuizSession,
+  clearQuizSession,
+} from './utils/quizDb';
 
 import { Navbar } from './components/Navbar';
 import { QuestionCard } from './components/QuestionCard';
@@ -83,7 +91,20 @@ export const App: React.FC = () => {
       }
       setIsMistakePractice(false);
       setRawQuestions(qs);
-      resetQuizState(qs, shuffle);
+
+      // Check if session exists in LocalStorage database
+      const savedSession = getQuizSession(testId);
+      if (savedSession && Object.keys(savedSession.answers || {}).length > 0 && !shuffle) {
+        setActiveQuestions(qs);
+        setCurrentIndex(Math.min(savedSession.currentIndex || 0, qs.length - 1));
+        setAnswers(savedSession.answers || {});
+        setIsExamSubmitted(savedSession.isExamSubmitted || false);
+        setExamScore(savedSession.examScore || 0);
+        setTimerSeconds(savedSession.timerSeconds || 0);
+        setMode(savedSession.mode || 'practice');
+      } else {
+        resetQuizState(qs, shuffle);
+      }
     },
     [isShuffled, resetQuizState]
   );
@@ -123,6 +144,34 @@ export const App: React.FC = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [mode, isExamSubmitted]);
+
+  // Auto-save test session to LocalStorage (acting as persistent database)
+  useEffect(() => {
+    if (selectedTestId && activeQuestions.length > 0 && !isMistakePractice) {
+      saveQuizSession(selectedTestId, {
+        testId: selectedTestId,
+        mode,
+        currentIndex,
+        answers,
+        isExamSubmitted,
+        examScore,
+        timerSeconds,
+        isShuffled,
+        lastUpdated: Date.now(),
+      });
+    }
+  }, [
+    selectedTestId,
+    mode,
+    currentIndex,
+    answers,
+    isExamSubmitted,
+    examScore,
+    timerSeconds,
+    isShuffled,
+    isMistakePractice,
+    activeQuestions.length,
+  ]);
 
   // Current question
   const currentQuestion = activeQuestions[currentIndex];
@@ -368,13 +417,15 @@ export const App: React.FC = () => {
   // Retry full test
   const handleRetry = () => {
     setIsResultModalOpen(false);
-    loadTestQuestions(selectedTestId);
+    clearQuizSession(selectedTestId);
+    resetQuizState(rawQuestions, isShuffled);
   };
 
   // Retry only mistakes
   const handleRetryMistakes = () => {
     setIsResultModalOpen(false);
-    const mistakes = activeQuestions.filter((q) => answers[q.id]?.isCorrect === false);
+    // Any question not correctly answered (including unanswered questions) is a mistake!
+    const mistakes = activeQuestions.filter((q) => answers[q.id]?.isCorrect !== true);
     if (mistakes.length === 0) return;
     setIsMistakePractice(true);
     setMode('practice');

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import type { Question, UserAnswer } from '../data/types';
-import { IconCheck, IconX, IconStar } from './icons';
 
 interface QuestionGridProps {
   questions: Question[];
@@ -23,17 +22,25 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
 }) => {
   const [filter, setFilter] = useState<'all' | 'unanswered' | 'flagged'>('all');
 
+  // Count answered questions (has at least 1 selection)
   const answeredCount = questions.filter(
     (q) => (answers[q.id]?.selectedOptionIds || []).length > 0
   ).length;
 
+  // Correct count
   const correctCount = questions.filter((q) => answers[q.id]?.isCorrect === true).length;
 
-  const wrongCount = questions.filter((q) => {
-    const a = answers[q.id];
-    return a && a.isSubmitted && a.isCorrect === false;
-  }).length;
+  // Wrong count:
+  // - In exam mode after submit: anything that is not correct is WRONG (questions.length - correctCount)
+  // - In practice mode: count submitted questions that are marked false
+  const wrongCount = isExamSubmitted
+    ? questions.length - correctCount
+    : questions.filter((q) => {
+        const a = answers[q.id];
+        return a && a.isSubmitted && a.isCorrect === false;
+      }).length;
 
+  // Flagged count
   const flaggedCount = questions.filter((q) => answers[q.id]?.marked).length;
 
   const progressPct =
@@ -41,52 +48,61 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
 
   const getCellStatus = (q: Question, idx: number): string => {
     const a = answers[q.id];
-    let classes = '';
+    const classList: string[] = ['matrix-cell'];
 
     if (idx === currentIndex) {
-      classes += ' is-active';
+      classList.push('is-active');
     }
 
-    if (!a || a.selectedOptionIds.length === 0) {
-      return classes;
+    if (a?.marked) {
+      classList.push('is-marked');
     }
 
-    if (a.marked) {
-      classes += ' is-marked';
-    }
+    const hasAnswer = a && a.selectedOptionIds && a.selectedOptionIds.length > 0;
 
-    if (mode === 'practice' || isExamSubmitted) {
-      if (a.isSubmitted) {
+    if (mode === 'practice') {
+      if (a?.isSubmitted) {
         if (a.isCorrect) {
-          classes += ' is-correct';
+          classList.push('is-correct');
         } else {
-          classes += ' is-wrong';
+          classList.push('is-wrong');
         }
-      } else {
-        classes += ' is-answered';
+      } else if (hasAnswer) {
+        classList.push('is-answered');
       }
-    } else {
-      classes += ' is-answered';
+    } else if (mode === 'exam') {
+      if (isExamSubmitted) {
+        if (a?.isCorrect) {
+          classList.push('is-correct');
+        } else {
+          // If submitted, all questions not correct (including blank ones) are WRONG
+          classList.push('is-wrong');
+        }
+      } else if (hasAnswer) {
+        classList.push('is-answered');
+      }
     }
 
-    return classes;
+    return classList.join(' ');
   };
 
-  const filteredQuestions = questions.map((q, idx) => ({ q, idx })).filter(({ q }) => {
-    const a = answers[q.id];
-    if (filter === 'unanswered') {
-      return !a || a.selectedOptionIds.length === 0;
-    }
-    if (filter === 'flagged') {
-      return a?.marked === true;
-    }
-    return true;
-  });
+  const filteredQuestions = questions
+    .map((q, idx) => ({ q, idx }))
+    .filter(({ q }) => {
+      const a = answers[q.id];
+      if (filter === 'unanswered') {
+        return !a || a.selectedOptionIds.length === 0;
+      }
+      if (filter === 'flagged') {
+        return a?.marked === true;
+      }
+      return true;
+    });
 
   return (
     <div className={isMobileDrawer ? 'mobile-sheet-content' : 'cockpit-panel desktop-only'}>
       <div className="cockpit-header">
-        <span className="cockpit-title">Bảng câu hỏi</span>
+        <span className="cockpit-title">Bảng số câu hỏi</span>
         <span style={{ fontSize: '0.825rem', fontWeight: 700, color: 'var(--text-secondary)' }}>
           {answeredCount}/{questions.length} ({progressPct}%)
         </span>
@@ -127,7 +143,7 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
           className={`btn-pill ${filter === 'all' ? 'active' : ''}`}
           style={{
             fontSize: '0.75rem',
-            padding: '0.2rem 0.5rem',
+            padding: '0.25rem 0.55rem',
             background: filter === 'all' ? 'var(--accent-primary-subtle)' : undefined,
             color: filter === 'all' ? 'var(--accent-primary)' : undefined,
             borderColor: filter === 'all' ? 'var(--accent-primary-border)' : undefined,
@@ -140,7 +156,7 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
           className={`btn-pill ${filter === 'unanswered' ? 'active' : ''}`}
           style={{
             fontSize: '0.75rem',
-            padding: '0.2rem 0.5rem',
+            padding: '0.25rem 0.55rem',
             background: filter === 'unanswered' ? 'var(--accent-primary-subtle)' : undefined,
             color: filter === 'unanswered' ? 'var(--accent-primary)' : undefined,
             borderColor: filter === 'unanswered' ? 'var(--accent-primary-border)' : undefined,
@@ -154,7 +170,7 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
             className={`btn-pill ${filter === 'flagged' ? 'active' : ''}`}
             style={{
               fontSize: '0.75rem',
-              padding: '0.2rem 0.5rem',
+              padding: '0.25rem 0.55rem',
               background: filter === 'flagged' ? 'var(--accent-warning-subtle)' : undefined,
               color: filter === 'flagged' ? 'var(--accent-warning)' : undefined,
               borderColor: filter === 'flagged' ? 'var(--accent-warning-border)' : undefined,
@@ -168,16 +184,20 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
 
       {/* Question Number Matrix */}
       <div className="matrix-grid">
-        {filteredQuestions.map(({ q, idx }) => (
-          <button
-            key={q.id}
-            className={`matrix-cell ${getCellStatus(q, idx)}`}
-            onClick={() => onSelectIndex(idx)}
-            title={`Câu ${idx + 1}`}
-          >
-            {idx + 1}
-          </button>
-        ))}
+        {filteredQuestions.map(({ q, idx }) => {
+          const a = answers[q.id];
+          return (
+            <button
+              key={q.id}
+              className={getCellStatus(q, idx)}
+              onClick={() => onSelectIndex(idx)}
+              title={`Câu ${idx + 1}`}
+            >
+              <span>{idx + 1}</span>
+              {a?.marked && <span className="cell-star-badge">★</span>}
+            </button>
+          );
+        })}
       </div>
 
       {/* Legend */}
@@ -196,7 +216,7 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
         ) : (
           <div className="legend-dot">
             <span className="dot" style={{ background: 'var(--accent-primary)' }}></span>
-            <span>Đã chọn</span>
+            <span>Đã làm</span>
           </div>
         )}
         <div className="legend-dot">
@@ -204,7 +224,7 @@ export const QuestionGrid: React.FC<QuestionGridProps> = ({
           <span>Chưa làm</span>
         </div>
         <div className="legend-dot">
-          <span className="dot" style={{ background: 'var(--accent-warning)' }}></span>
+          <span style={{ color: 'var(--accent-warning)', fontSize: '0.85rem' }}>★</span>
           <span>Đánh dấu</span>
         </div>
       </div>
