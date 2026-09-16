@@ -1137,26 +1137,8 @@ body {
 }
 
 /* ==========================================================================
-   ANIMATIONS: SWIPE GESTURE HINT & FADE IN
+   ANIMATIONS: FADE IN
    ========================================================================== */
-@keyframes swipeLR {
-  0%, 100% {
-    transform: translateX(0);
-  }
-  25% {
-    transform: translateX(-6px);
-  }
-  50% {
-    transform: translateX(0);
-  }
-  75% {
-    transform: translateX(6px);
-  }
-}
-
-.animate-swipe-lr {
-  animation: swipeLR 1.8s ease-in-out infinite;
-}
 
 @keyframes fadeIn {
   from {

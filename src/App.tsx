@@ -19,7 +19,6 @@ import { HistoryModal } from './components/HistoryModal';
 import { ExamResultModal } from './components/ExamResultModal';
 import { MobileTestSheet } from './components/MobileTestSheet';
 import { MobileMenuSheet } from './components/MobileMenuSheet';
-import { SwipeHint } from './components/SwipeHint';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -83,7 +82,7 @@ export const App: React.FC = () => {
 
   // Load test questions
   const loadTestQuestions = useCallback(
-    (testId: string, shuffle: boolean = isShuffled) => {
+    (testId: string, shuffle: boolean = isShuffled, forcedMode?: 'practice' | 'exam') => {
       let qs: Question[] = [];
       if (testId === 'all') {
         qs = TEST_SUITES.flatMap((t) => t.questions);
@@ -94,21 +93,40 @@ export const App: React.FC = () => {
       setIsMistakePractice(false);
       setRawQuestions(qs);
 
+      const targetMode = forcedMode || mode;
+
       // Check if session exists in LocalStorage database
       const savedSession = getQuizSession(testId);
       if (savedSession && Object.keys(savedSession.answers || {}).length > 0 && !shuffle) {
         setActiveQuestions(qs);
         setCurrentIndex(Math.min(savedSession.currentIndex || 0, qs.length - 1));
-        setAnswers(savedSession.answers || {});
-        setIsExamSubmitted(savedSession.isExamSubmitted || false);
+
+        const loadedAnswers = { ...(savedSession.answers || {}) };
+        if (targetMode === 'practice') {
+          // Clean up any falsely submitted empty answers from previous sessions
+          Object.keys(loadedAnswers).forEach((qId) => {
+            if (!loadedAnswers[qId]?.selectedOptionIds || loadedAnswers[qId].selectedOptionIds.length === 0) {
+              loadedAnswers[qId] = {
+                ...loadedAnswers[qId],
+                isSubmitted: false,
+                isCorrect: undefined,
+              };
+            }
+          });
+        }
+        setAnswers(loadedAnswers);
+        // In practice mode, never lock quiz with isExamSubmitted
+        const examSubmitted = targetMode === 'practice' ? false : (savedSession.isExamSubmitted || false);
+        setIsExamSubmitted(examSubmitted);
         setExamScore(savedSession.examScore || 0);
         setTimerSeconds(savedSession.timerSeconds || 0);
-        setMode(savedSession.mode || 'practice');
+        setMode(targetMode);
       } else {
+        setMode(targetMode);
         resetQuizState(qs, shuffle);
       }
     },
-    [isShuffled, resetQuizState]
+    [isShuffled, mode, resetQuizState]
   );
 
   // Initial setup
@@ -189,7 +207,8 @@ export const App: React.FC = () => {
       marked: false,
     };
 
-    if (mode === 'practice' && existing.isSubmitted) return;
+    // If exam is submitted, lock answers
+    if (mode === 'exam' && isExamSubmitted) return;
 
     let newSelected: string[];
     const isMulti = currentQuestion.type === 'multiple';
@@ -324,7 +343,10 @@ export const App: React.FC = () => {
       }
     }
     setMode(newMode);
-    loadTestQuestions(selectedTestId);
+    if (newMode === 'practice') {
+      setIsExamSubmitted(false);
+    }
+    loadTestQuestions(selectedTestId, isShuffled, newMode);
   };
 
   // Toggle shuffle
@@ -344,7 +366,7 @@ export const App: React.FC = () => {
 
   // Submit Exam / Practice session
   const handleSubmitExam = () => {
-    if (isExamSubmitted) return;
+    if (isExamSubmitted && mode === 'exam') return;
 
     const answeredCount = activeQuestions.filter(
       (q) => (answers[q.id]?.selectedOptionIds || []).length > 0
@@ -384,7 +406,7 @@ export const App: React.FC = () => {
 
       updatedAnswers[q.id] = {
         selectedOptionIds: selected,
-        isSubmitted: true,
+        isSubmitted: mode === 'exam' ? true : (a ? a.isSubmitted : false),
         isCorrect: isRight,
         marked: a?.marked || false,
       };
@@ -452,6 +474,21 @@ export const App: React.FC = () => {
   const handleExitMistakePractice = () => {
     setIsMistakePractice(false);
     loadTestQuestions(selectedTestId);
+  };
+
+  // Handle reviewing after results
+  const handleReview = () => {
+    setIsResultModalOpen(false);
+    if (mode === 'practice') {
+      setIsExamSubmitted(false);
+    }
+  };
+
+  const handleCloseResultModal = () => {
+    setIsResultModalOpen(false);
+    if (mode === 'practice') {
+      setIsExamSubmitted(false);
+    }
   };
 
   const handleSaveName = (name: string) => {
@@ -594,7 +631,7 @@ export const App: React.FC = () => {
           <IconArrowRight size={16} />
         </button>
 
-        {!isExamSubmitted && (
+        {(!isExamSubmitted || mode === 'practice') && (
           <button
             className="btn-action btn-success"
             style={{ padding: '0.45rem 0.75rem', fontWeight: 700 }}
@@ -670,9 +707,6 @@ export const App: React.FC = () => {
         onClose={() => setIsMobileMenuSheetOpen(false)}
       />
 
-      {/* Mobile Swipe Gesture Tutorial / Hint Notification */}
-      <SwipeHint />
-
       {/* Desktop & Mobile Modals */}
       <NameModal
         isOpen={isNameModalOpen}
@@ -695,10 +729,11 @@ export const App: React.FC = () => {
         timeSpentSeconds={timerSeconds}
         userName={userName}
         hasMistakes={examScore < activeQuestions.length}
-        onReview={() => setIsResultModalOpen(false)}
+        mode={mode}
+        onReview={handleReview}
         onRetry={handleRetry}
         onRetryMistakes={handleRetryMistakes}
-        onClose={() => setIsResultModalOpen(false)}
+        onClose={handleCloseResultModal}
       />
     </div>
   );

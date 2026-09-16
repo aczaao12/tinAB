@@ -15,6 +15,7 @@ interface ExamResultModalProps {
   timeSpentSeconds: number;
   userName: string;
   hasMistakes: boolean;
+  mode?: 'practice' | 'exam';
   onReview: () => void;
   onRetry: () => void;
   onRetryMistakes: () => void;
@@ -28,6 +29,7 @@ export const ExamResultModal: React.FC<ExamResultModalProps> = ({
   timeSpentSeconds,
   userName,
   hasMistakes,
+  mode,
   onReview,
   onRetry,
   onRetryMistakes,
@@ -116,7 +118,7 @@ export const ExamResultModal: React.FC<ExamResultModalProps> = ({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
           <button className="btn-action btn-primary" onClick={onReview}>
             <IconCheckCircle size={16} />
-            <span>Xem lại chi tiết bài làm</span>
+            <span>{mode === 'practice' ? 'Tiếp tục làm bài / Xem lại' : 'Xem lại chi tiết bài làm'}</span>
           </button>
 
           {hasMistakes && (

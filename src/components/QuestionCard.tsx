@@ -155,19 +155,6 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
 
       {/* Scrollable Stage Content Body */}
       <div className="stage-content-scroll">
-        {/* Mobile-Only Swipe Indicator Cue */}
-        <div className="mobile-only flex items-center justify-between text-[11px] font-medium text-slate-400 dark:text-slate-500 mb-2 px-1 select-none">
-          <span className="flex items-center gap-1 opacity-70">
-            {canPrev ? '‹ Vuốt sang phải' : ''}
-          </span>
-          <span className="flex items-center gap-1 opacity-60">
-            <span className="inline-block animate-swipe-lr">‹ Vuốt chuyển câu ›</span>
-          </span>
-          <span className="flex items-center gap-1 opacity-70">
-            {canNext ? 'Vuốt sang trái ›' : ''}
-          </span>
-        </div>
-
         {/* Question Prompt */}
         <h2 className="question-heading">{question.prompt}</h2>
 
@@ -256,18 +243,36 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
             <div className="solution-content">
               {question.correctAnswerText}
             </div>
-            {mode === 'practice' && !isRight && onResetCurrentAnswer && (
-              <div style={{ marginTop: '0.25rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem', flexWrap: 'wrap', alignItems: 'center' }}>
+              {mode === 'practice' && onResetCurrentAnswer && (
                 <button
                   className="btn-pill"
-                  style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem' }}
+                  style={{ fontSize: '0.8rem', padding: '0.35rem 0.65rem' }}
                   onClick={onResetCurrentAnswer}
                 >
                   <IconRefresh size={14} />
-                  <span>Thử chọn lại câu này</span>
+                  <span>Làm lại câu này</span>
                 </button>
-              </div>
-            )}
+              )}
+              {canNext && (
+                <button
+                  className="btn-pill btn-primary mobile-only"
+                  style={{
+                    fontSize: '0.825rem',
+                    padding: '0.35rem 0.75rem',
+                    fontWeight: 700,
+                    marginLeft: 'auto',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                  }}
+                  onClick={onNext}
+                >
+                  <span>Câu tiếp theo</span>
+                  <IconArrowRight size={14} />
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -286,8 +291,8 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </div>
 
         <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {/* Submit / Finish button always available */}
-          {!isExamSubmitted && (
+          {/* Submit / Finish button */}
+          {(!isExamSubmitted || mode === 'practice') && (
             <button
               className="btn-action btn-success"
               onClick={onSubmitExam}
