@@ -27,6 +27,7 @@ import {
   IconX,
 } from './components/icons';
 import { logStartQuiz, logSubmitExam } from './utils/telegram';
+import { triggerVibrate } from './utils/haptics';
 
 export const App: React.FC = () => {
   const [selectedTestId, setSelectedTestId] = useState<string>('test-1');
@@ -212,6 +213,12 @@ export const App: React.FC = () => {
       const correctOption = currentQuestion.options.find((o) => o.isCorrect);
       const isRight = correctOption?.id === optId;
 
+      if (mode === 'practice') {
+        triggerVibrate(isRight ? 'correct' : 'wrong');
+      } else {
+        triggerVibrate('tap');
+      }
+
       setAnswers((prev) => ({
         ...prev,
         [qId]: {
@@ -239,6 +246,8 @@ export const App: React.FC = () => {
     const isRight =
       correctIds.length === chosenSorted.length &&
       correctIds.every((val, idx) => val === chosenSorted[idx]);
+
+    triggerVibrate(isRight ? 'correct' : 'wrong');
 
     setAnswers((prev) => ({
       ...prev,
@@ -332,7 +341,7 @@ export const App: React.FC = () => {
     localStorage.setItem('tinab_theme', nextTheme);
   };
 
-  // Submit Exam
+  // Submit Exam / Practice session
   const handleSubmitExam = () => {
     if (isExamSubmitted) return;
 
@@ -342,11 +351,14 @@ export const App: React.FC = () => {
     const totalCount = activeQuestions.length;
 
     if (answeredCount < totalCount) {
+      const actionName = mode === 'exam' ? 'nộp bài thi' : 'hoàn thành bài ôn tập';
       const confirmSubmit = confirm(
-        `Bạn mới trả lời ${answeredCount}/${totalCount} câu hỏi. Bạn có chắc chắn muốn nộp bài ngay không?`
+        `Bạn mới trả lời ${answeredCount}/${totalCount} câu hỏi. Bạn có chắc chắn muốn ${actionName} sớm không?`
       );
       if (!confirmSubmit) return;
     }
+
+    triggerVibrate('submit');
 
     if (timerRef.current) clearInterval(timerRef.current);
 
@@ -391,7 +403,7 @@ export const App: React.FC = () => {
       userName: userName || 'Ẩn danh',
       testId: selectedTestId,
       testTitle: testTitle,
-      mode: 'exam',
+      mode: mode,
       score: correctTotal,
       totalQuestions: totalCount,
       percentage: Math.round((correctTotal / totalCount) * 100),
@@ -548,13 +560,12 @@ export const App: React.FC = () => {
       <nav className="mobile-bottom-bar mobile-only" aria-label="Điều hướng câu hỏi">
         <button
           className="btn-action btn-secondary"
-          style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
+          style={{ padding: '0.45rem 0.6rem', minWidth: '42px' }}
           onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Câu trước"
         >
           <IconArrowLeft size={16} />
-          <span>Trước</span>
         </button>
 
         {/* Center Grid Trigger */}
@@ -572,25 +583,26 @@ export const App: React.FC = () => {
           )}
         </button>
 
-        {mode === 'exam' && !isExamSubmitted ? (
+        <button
+          className="btn-action btn-secondary"
+          style={{ padding: '0.45rem 0.6rem', minWidth: '42px' }}
+          onClick={handleNext}
+          disabled={currentIndex === activeQuestions.length - 1}
+          aria-label="Câu sau"
+        >
+          <IconArrowRight size={16} />
+        </button>
+
+        {!isExamSubmitted && (
           <button
             className="btn-action btn-success"
-            style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
+            style={{ padding: '0.45rem 0.75rem', fontWeight: 700 }}
             onClick={handleSubmitExam}
+            aria-label="Nộp bài"
+            title={mode === 'exam' ? 'Nộp bài thi' : 'Hoàn thành bài ôn tập'}
           >
-            <IconCheckCircle size={16} />
+            <IconCheckCircle size={15} />
             <span>Nộp</span>
-          </button>
-        ) : (
-          <button
-            className="btn-action btn-secondary"
-            style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
-            onClick={handleNext}
-            disabled={currentIndex === activeQuestions.length - 1}
-            aria-label="Câu sau"
-          >
-            <span>Sau</span>
-            <IconArrowRight size={16} />
           </button>
         )}
       </nav>

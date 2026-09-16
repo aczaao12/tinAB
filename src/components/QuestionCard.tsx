@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import type { Question, UserAnswer } from '../data/types';
 import {
   IconStar,
@@ -51,9 +51,34 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const isFlagged = userAnswer?.marked || false;
   const isSubmitted = userAnswer?.isSubmitted || false;
 
-  // Feedback is displayed when:
-  // - In practice mode: single-choice answer selected, OR multi-choice answer confirmed (isSubmitted = true)
-  // - In exam mode: exam is submitted
+  // Swipe detection references
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+
+    // Minimum swipe threshold of 45px and predominantly horizontal
+    if (Math.abs(deltaX) > 45 && Math.abs(deltaX) > Math.abs(deltaY) * 1.4) {
+      if (deltaX < 0 && canNext) {
+        // Swiped left -> Next
+        onNext();
+      } else if (deltaX > 0 && canPrev) {
+        // Swiped right -> Previous
+        onPrev();
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+
   const showFeedback =
     (mode === 'practice' && isSubmitted) ||
     (mode === 'exam' && isExamSubmitted);
@@ -80,8 +105,12 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   const isMulti = question.type === 'multiple';
 
   return (
-    <div className="stage-card">
-      {/* Header bar with question number, type, feedback, and flag */}
+    <div
+      className="stage-card"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      {/* Pinned Stage Header (Sticky) */}
       <div className="stage-header">
         <div className="stage-tags">
           <span className="pill-badge pill-primary">
@@ -121,113 +150,113 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         </button>
       </div>
 
-      {/* Question Prompt */}
-      <h2 className="question-heading">{question.prompt}</h2>
+      {/* Scrollable Stage Content Body */}
+      <div className="stage-content-scroll">
+        {/* Question Prompt */}
+        <h2 className="question-heading">{question.prompt}</h2>
 
-      {/* Options Stack */}
-      <div className="choices-stack">
-        {question.options.map((option, idx) => {
-          const isSelected = selectedOptionIds.includes(option.id);
-          const optClass = getOptionClass(option.id, option.isCorrect);
+        {/* Options Stack */}
+        <div className="choices-stack">
+          {question.options.map((option, idx) => {
+            const isSelected = selectedOptionIds.includes(option.id);
+            const optClass = getOptionClass(option.id, option.isCorrect);
 
-          return (
-            <div
-              key={option.id}
-              className={`choice-card ${optClass}`}
-              role="button"
-              tabIndex={0}
-              onClick={() => onSelectOption(option.id)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  onSelectOption(option.id);
-                }
-              }}
-            >
-              {/* Option letter and key hint */}
-              <div className="choice-key" title={`Phím tắt: ${idx + 1} hoặc ${option.id}`}>
-                {option.id}
+            return (
+              <div
+                key={option.id}
+                className={`choice-card ${optClass}`}
+                role="button"
+                tabIndex={0}
+                onClick={() => onSelectOption(option.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    onSelectOption(option.id);
+                  }
+                }}
+              >
+                <div className="choice-key" title={`Phím tắt: ${idx + 1} hoặc ${option.id}`}>
+                  {option.id}
+                </div>
+
+                <div className="choice-text">{option.text}</div>
+
+                {showFeedback && (
+                  <>
+                    {option.isCorrect && (
+                      <span
+                        className="choice-status-badge"
+                        style={{
+                          background: 'var(--accent-success-subtle)',
+                          color: 'var(--accent-success-text)',
+                        }}
+                      >
+                        <IconCheck size={14} />
+                        <span className="desktop-only">Đáp án đúng</span>
+                      </span>
+                    )}
+                    {!option.isCorrect && isSelected && (
+                      <span
+                        className="choice-status-badge"
+                        style={{
+                          background: 'var(--accent-danger-subtle)',
+                          color: 'var(--accent-danger-text)',
+                        }}
+                      >
+                        <IconX size={14} />
+                        <span className="desktop-only">Đã chọn</span>
+                      </span>
+                    )}
+                  </>
+                )}
               </div>
+            );
+          })}
+        </div>
 
-              {/* Option text */}
-              <div className="choice-text">{option.text}</div>
+        {/* Multi-choice Confirmation in Practice Mode */}
+        {mode === 'practice' && isMulti && !isSubmitted && (
+          <div className="multi-action-bar">
+            <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+              Đã chọn <strong>{selectedOptionIds.length}</strong> phương án
+            </span>
+            <button
+              className="btn-action btn-primary"
+              disabled={selectedOptionIds.length === 0}
+              onClick={onCheckMultiAnswer}
+            >
+              <IconCheck size={16} />
+              <span>Kiểm tra đáp án</span>
+            </button>
+          </div>
+        )}
 
-              {/* Status Badge in Feedback mode */}
-              {showFeedback && (
-                <>
-                  {option.isCorrect && (
-                    <span
-                      className="choice-status-badge"
-                      style={{
-                        background: 'var(--accent-success-subtle)',
-                        color: 'var(--accent-success-text)',
-                      }}
-                    >
-                      <IconCheck size={14} />
-                      <span className="desktop-only">Đáp án đúng</span>
-                    </span>
-                  )}
-                  {!option.isCorrect && isSelected && (
-                    <span
-                      className="choice-status-badge"
-                      style={{
-                        background: 'var(--accent-danger-subtle)',
-                        color: 'var(--accent-danger-text)',
-                      }}
-                    >
-                      <IconX size={14} />
-                      <span className="desktop-only">Đã chọn</span>
-                    </span>
-                  )}
-                </>
-              )}
+        {/* Feedback explanation box */}
+        {showFeedback && (
+          <div className="solution-panel">
+            <div className="solution-header">
+              <IconLightbulb size={16} />
+              <span>Đáp án chuẩn xác</span>
             </div>
-          );
-        })}
+            <div className="solution-content">
+              {question.correctAnswerText}
+            </div>
+            {mode === 'practice' && !isRight && onResetCurrentAnswer && (
+              <div style={{ marginTop: '0.25rem' }}>
+                <button
+                  className="btn-pill"
+                  style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem' }}
+                  onClick={onResetCurrentAnswer}
+                >
+                  <IconRefresh size={14} />
+                  <span>Thử chọn lại câu này</span>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
-      {/* Multi-choice Confirmation in Practice Mode */}
-      {mode === 'practice' && isMulti && !isSubmitted && (
-        <div className="multi-action-bar">
-          <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
-            Đã chọn <strong>{selectedOptionIds.length}</strong> phương án
-          </span>
-          <button
-            className="btn-action btn-primary"
-            disabled={selectedOptionIds.length === 0}
-            onClick={onCheckMultiAnswer}
-          >
-            <IconCheck size={16} />
-            <span>Kiểm tra đáp án</span>
-          </button>
-        </div>
-      )}
-
-      {/* Feedback explanation box */}
-      {showFeedback && (
-        <div className="solution-panel">
-          <div className="solution-header">
-            <IconLightbulb size={16} />
-            <span>Đáp án chuẩn xác</span>
-          </div>
-          <div className="solution-content">
-            {question.correctAnswerText}
-          </div>
-          {mode === 'practice' && !isRight && onResetCurrentAnswer && (
-            <div style={{ marginTop: '0.25rem' }}>
-              <button
-                className="btn-pill"
-                style={{ fontSize: '0.8rem', padding: '0.3rem 0.65rem' }}
-                onClick={onResetCurrentAnswer}
-              >
-                <IconRefresh size={14} />
-                <span>Thử chọn lại câu này</span>
-              </button>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Desktop Stage Footer Controls */}
+      {/* Pinned Stage Footer (Sticky at bottom on Desktop) */}
       <div className="stage-footer desktop-only">
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <button className="btn-action btn-secondary" onClick={onPrev} disabled={!canPrev}>
@@ -240,18 +269,25 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
           </button>
         </div>
 
-        <div>
-          {mode === 'exam' && !isExamSubmitted ? (
-            <button className="btn-action btn-success" onClick={onSubmitExam}>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          {/* Submit / Finish button always available */}
+          {!isExamSubmitted && (
+            <button
+              className="btn-action btn-success"
+              onClick={onSubmitExam}
+              title={mode === 'exam' ? 'Nộp bài thi' : 'Hoàn thành & Tổng kết điểm ôn tập'}
+            >
               <IconCheckCircle size={16} />
-              <span>Nộp bài thi</span>
+              <span>{mode === 'exam' ? 'Nộp bài thi' : 'Nộp / Tổng kết điểm'}</span>
             </button>
-          ) : canNext ? (
+          )}
+
+          {canNext && (
             <button className="btn-action btn-primary" onClick={onNext}>
               <span>Tiếp theo</span>
               <IconArrowRight size={16} />
             </button>
-          ) : null}
+          )}
         </div>
       </div>
     </div>
