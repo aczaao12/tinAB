@@ -9,6 +9,8 @@ import { QuestionGrid } from './components/QuestionGrid';
 import { NameModal } from './components/NameModal';
 import { HistoryModal } from './components/HistoryModal';
 import { ExamResultModal } from './components/ExamResultModal';
+import { MobileTestSheet } from './components/MobileTestSheet';
+import { MobileMenuSheet } from './components/MobileMenuSheet';
 import {
   IconArrowLeft,
   IconArrowRight,
@@ -16,6 +18,7 @@ import {
   IconCheckCircle,
   IconX,
 } from './components/icons';
+import { logStartQuiz, logSubmitExam } from './utils/telegram';
 
 export const App: React.FC = () => {
   const [selectedTestId, setSelectedTestId] = useState<string>('test-1');
@@ -32,8 +35,10 @@ export const App: React.FC = () => {
   // Mistake practice state
   const [isMistakePractice, setIsMistakePractice] = useState<boolean>(false);
 
-  // Mobile Bottom Sheet for question matrix
+  // Mobile Bottom Sheets
   const [isMobileSheetOpen, setIsMobileSheetOpen] = useState<boolean>(false);
+  const [isMobileTestSheetOpen, setIsMobileTestSheetOpen] = useState<boolean>(false);
+  const [isMobileMenuSheetOpen, setIsMobileMenuSheetOpen] = useState<boolean>(false);
 
   // Timer
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
@@ -121,6 +126,7 @@ export const App: React.FC = () => {
 
   // Current question
   const currentQuestion = activeQuestions[currentIndex];
+  const isCurrentFlagged = currentQuestion ? answers[currentQuestion.id]?.marked : false;
 
   // Option selection
   const handleSelectOption = (optId: string) => {
@@ -132,14 +138,12 @@ export const App: React.FC = () => {
       marked: false,
     };
 
-    // If already submitted in practice mode, do not allow changing without resetting
     if (mode === 'practice' && existing.isSubmitted) return;
 
     let newSelected: string[];
     const isMulti = currentQuestion.type === 'multiple';
 
     if (isMulti) {
-      // Multiple choice: toggle option without immediate submit in practice mode
       if (existing.selectedOptionIds.includes(optId)) {
         newSelected = existing.selectedOptionIds.filter((id) => id !== optId);
       } else {
@@ -151,11 +155,10 @@ export const App: React.FC = () => {
         [qId]: {
           ...existing,
           selectedOptionIds: newSelected,
-          isSubmitted: false, // Wait for user to confirm "Kiểm tra đáp án"
+          isSubmitted: false,
         },
       }));
     } else {
-      // Single choice
       newSelected = [optId];
       const correctOption = currentQuestion.options.find((o) => o.isCorrect);
       const isRight = correctOption?.id === optId;
@@ -166,13 +169,13 @@ export const App: React.FC = () => {
           ...existing,
           selectedOptionIds: newSelected,
           isCorrect: isRight,
-          isSubmitted: mode === 'practice', // Single choice in practice evaluates immediately
+          isSubmitted: mode === 'practice',
         },
       }));
     }
   };
 
-  // Confirm answer for multi-choice in Practice Mode
+  // Confirm multi-choice answer in Practice mode
   const handleCheckMultiAnswer = () => {
     if (!currentQuestion) return;
     const qId = currentQuestion.id;
@@ -350,6 +353,16 @@ export const App: React.FC = () => {
     saveAttempt(record);
     setAttempts(getAttempts());
     setIsResultModalOpen(true);
+
+    // Send Telegram Notification
+    logSubmitExam({
+      userName: userName || 'Ẩn danh',
+      testTitle,
+      score: correctTotal,
+      totalQuestions: totalCount,
+      percentage: Math.round((correctTotal / totalCount) * 100),
+      timeSpentSeconds: timerSeconds,
+    });
   };
 
   // Retry full test
@@ -381,6 +394,17 @@ export const App: React.FC = () => {
     setUserNameState(name);
     setUserName(name);
     setIsNameModalOpen(false);
+
+    const suite = TEST_SUITES.find((t) => t.id === selectedTestId);
+    const testTitle =
+      selectedTestId === 'all' ? 'Tất cả đề thi' : suite?.shortTitle || selectedTestId;
+
+    logStartQuiz({
+      userName: name,
+      testTitle,
+      mode,
+      totalQuestions: activeQuestions.length,
+    });
   };
 
   // Keyboard shortcut listener
@@ -406,7 +430,7 @@ export const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Navbar */}
+      {/* Navbar with mobile app bar & desktop workstation bar */}
       <Navbar
         testSuites={TEST_SUITES}
         selectedTestId={selectedTestId}
@@ -417,6 +441,10 @@ export const App: React.FC = () => {
         isShuffled={isShuffled}
         theme={theme}
         timerSeconds={timerSeconds}
+        currentIndex={currentIndex}
+        totalQuestions={activeQuestions.length}
+        isCurrentFlagged={isCurrentFlagged}
+        onToggleFlag={handleToggleFlag}
         onSelectTest={handleSelectTest}
         onExitMistakePractice={handleExitMistakePractice}
         onSelectMode={handleSelectMode}
@@ -424,9 +452,11 @@ export const App: React.FC = () => {
         onOpenNameModal={() => setIsNameModalOpen(true)}
         onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
         onToggleTheme={handleToggleTheme}
+        onOpenMobileTestSheet={() => setIsMobileTestSheetOpen(true)}
+        onOpenMobileMenuSheet={() => setIsMobileMenuSheetOpen(true)}
       />
 
-      {/* Main Workspace (Split Cockpit layout) */}
+      {/* Main Workspace */}
       <main className="workspace-grid">
         {currentQuestion ? (
           <QuestionCard
@@ -452,7 +482,7 @@ export const App: React.FC = () => {
           </div>
         )}
 
-        {/* Desktop Sidebar Cockpit */}
+        {/* Desktop Cockpit Sidebar */}
         <QuestionGrid
           questions={activeQuestions}
           currentIndex={currentIndex}
@@ -463,16 +493,16 @@ export const App: React.FC = () => {
         />
       </main>
 
-      {/* Mobile Thumb-Friendly Bottom Navigation Bar */}
+      {/* Mobile-Native Fixed Thumb-Zone Bottom Action Bar */}
       <nav className="mobile-bottom-bar mobile-only" aria-label="Điều hướng câu hỏi">
         <button
           className="btn-action btn-secondary"
-          style={{ padding: '0.5rem 0.85rem' }}
+          style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
           onClick={handlePrev}
           disabled={currentIndex === 0}
           aria-label="Câu trước"
         >
-          <IconArrowLeft size={18} />
+          <IconArrowLeft size={16} />
           <span>Trước</span>
         </button>
 
@@ -486,7 +516,7 @@ export const App: React.FC = () => {
           <span>
             {currentIndex + 1} / {activeQuestions.length}
           </span>
-          {answers[currentQuestion?.id || '']?.marked && (
+          {isCurrentFlagged && (
             <span style={{ color: 'var(--accent-warning)', fontSize: '0.8rem' }}>★</span>
           )}
         </button>
@@ -494,7 +524,7 @@ export const App: React.FC = () => {
         {mode === 'exam' && !isExamSubmitted ? (
           <button
             className="btn-action btn-success"
-            style={{ padding: '0.5rem 0.85rem' }}
+            style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
             onClick={handleSubmitExam}
           >
             <IconCheckCircle size={16} />
@@ -503,18 +533,18 @@ export const App: React.FC = () => {
         ) : (
           <button
             className="btn-action btn-secondary"
-            style={{ padding: '0.5rem 0.85rem' }}
+            style={{ padding: '0.45rem 0.8rem', minWidth: '76px' }}
             onClick={handleNext}
             disabled={currentIndex === activeQuestions.length - 1}
-            aria-label="Câu tiếp theo"
+            aria-label="Câu sau"
           >
             <span>Sau</span>
-            <IconArrowRight size={18} />
+            <IconArrowRight size={16} />
           </button>
         )}
       </nav>
 
-      {/* Mobile Bottom Sheet Drawer for Questions Matrix */}
+      {/* Mobile Bottom Sheet: Question Number Matrix */}
       {isMobileSheetOpen && (
         <div
           className="bottom-sheet-overlay mobile-only"
@@ -524,8 +554,10 @@ export const App: React.FC = () => {
         >
           <div className="bottom-sheet" onClick={(e) => e.stopPropagation()}>
             <div className="sheet-handle"></div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
-              <span style={{ fontWeight: 800, fontSize: '1rem' }}>Bảng số câu hỏi</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.25rem' }}>
+              <span style={{ fontWeight: 800, fontSize: '1rem', color: 'var(--text-primary)' }}>
+                Bảng số câu hỏi
+              </span>
               <button
                 className="btn-icon-square"
                 onClick={() => setIsMobileSheetOpen(false)}
@@ -550,7 +582,31 @@ export const App: React.FC = () => {
         </div>
       )}
 
-      {/* Modals */}
+      {/* Mobile Bottom Sheet: Test Selector */}
+      <MobileTestSheet
+        isOpen={isMobileTestSheetOpen}
+        testSuites={TEST_SUITES}
+        selectedTestId={selectedTestId}
+        onSelectTest={handleSelectTest}
+        onClose={() => setIsMobileTestSheetOpen(false)}
+      />
+
+      {/* Mobile Bottom Sheet: Settings & Options */}
+      <MobileMenuSheet
+        isOpen={isMobileMenuSheetOpen}
+        mode={mode}
+        isShuffled={isShuffled}
+        theme={theme}
+        userName={userName}
+        onSelectMode={handleSelectMode}
+        onToggleShuffle={handleToggleShuffle}
+        onOpenHistoryModal={() => setIsHistoryModalOpen(true)}
+        onOpenNameModal={() => setIsNameModalOpen(true)}
+        onToggleTheme={handleToggleTheme}
+        onClose={() => setIsMobileMenuSheetOpen(false)}
+      />
+
+      {/* Desktop & Mobile Modals */}
       <NameModal
         isOpen={isNameModalOpen}
         initialName={userName}
