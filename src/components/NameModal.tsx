@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { IconX, IconUser } from './icons';
 
 interface NameModalProps {
   isOpen: boolean;
@@ -34,7 +35,7 @@ export const NameModal: React.FC<NameModalProps> = ({
 
   return (
     <div
-      className="modal-overlay"
+      className="modal-backdrop"
       onClick={onClose}
       onKeyDown={(e) => e.key === 'Escape' && onClose()}
       role="dialog"
@@ -42,35 +43,39 @@ export const NameModal: React.FC<NameModalProps> = ({
       tabIndex={-1}
     >
       <div
-        className="modal-card"
+        className="modal-surface"
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '440px' }}
+        style={{ maxWidth: '420px' }}
       >
-        <div className="modal-header">
-          <h2 className="modal-title">👋 Chào bạn!</h2>
-          <button className="btn-icon" onClick={onClose} aria-label="Đóng">
-            ✕
+        <div className="modal-head">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <IconUser size={20} color="var(--accent-primary)" />
+            <h2 className="modal-heading">Tên người học</h2>
+          </div>
+          <button className="btn-icon-square" onClick={onClose} aria-label="Đóng">
+            <IconX size={16} />
           </button>
         </div>
-        <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem' }}>
-          Nhập tên của bạn để ghi nhận kết quả và lưu lại lịch sử làm bài trên thiết bị này:
+
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+          Nhập tên của bạn để ghi nhận kết quả và lưu lại lịch sử làm bài trên trình duyệt này:
         </p>
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <input
             type="text"
-            className="text-input"
+            className="text-field"
             placeholder="Ví dụ: Nguyễn Văn A"
             value={nameInput}
             onChange={(e) => setNameInput(e.target.value)}
             autoFocus
           />
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
+            <button type="button" className="btn-action btn-secondary" onClick={onClose}>
               Bỏ qua
             </button>
-            <button type="submit" className="btn btn-primary">
-              Lưu tên & Bắt đầu
+            <button type="submit" className="btn-action btn-primary">
+              Lưu tên
             </button>
           </div>
         </form>

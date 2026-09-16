@@ -48,13 +48,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "C",
-            "text": "Xử lý và tạo ra những hình ảnh được hiển thị bằng máy tính của bạn",
-            "isCorrect": true
-          },
-          {
-            "id": "D",
-            "text": "Kết nối máy tính vào mạng",
+            "id": "A",
+            "text": "Lưu trữ các dữ liệu của bạn dưới các hình thức của các tập tin và thư mục",
             "isCorrect": false
           },
           {
@@ -63,12 +58,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Lưu trữ các dữ liệu của bạn dưới các hình thức của các tập tin và thư mục",
+            "id": "C",
+            "text": "Xử lý và tạo ra những hình ảnh được hiển thị bằng máy tính của bạn",
+            "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Kết nối máy tính vào mạng",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Xử lý và tạo ra những hình ảnh được hiển thị bằng máy tính của bạn"
+        "correctAnswerText": "Xử lý và tạo ra những hình ảnh được hiển thị bằng máy tính của bạn"
       },
       {
         "id": "test-1-q3",
@@ -141,9 +141,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Ctrl + C",
-            "isCorrect": true
+            "id": "A",
+            "text": "Ctrl + V",
+            "isCorrect": false
           },
           {
             "id": "B",
@@ -156,12 +156,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Ctrl + V",
-            "isCorrect": false
+            "id": "D",
+            "text": "Ctrl + C",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Ctrl + C"
+        "correctAnswerText": "Ctrl + C"
       },
       {
         "id": "test-1-q6",
@@ -177,6 +177,11 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
+            "id": "B",
+            "text": "Hệ điều hành",
+            "isCorrect": false
+          },
+          {
             "id": "C",
             "text": "Phần mềm đầu tiên chạy trên thiết bị phần cứng khi nó được bật lên",
             "isCorrect": true
@@ -185,14 +190,9 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "D",
             "text": "Trình duyệt web",
             "isCorrect": false
-          },
-          {
-            "id": "B",
-            "text": "Hệ điều hành",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Phần mềm đầu tiên chạy trên thiết bị phần cứng khi nó được bật lên"
+        "correctAnswerText": "Phần mềm đầu tiên chạy trên thiết bị phần cứng khi nó được bật lên"
       },
       {
         "id": "test-1-q7",
@@ -202,11 +202,6 @@ export const TEST_SUITES: TestSuite[] = [
         "prompt": "WWW là viết tắt của:",
         "type": "single",
         "options": [
-          {
-            "id": "C",
-            "text": "World Wide Web",
-            "isCorrect": true
-          },
           {
             "id": "A",
             "text": "Wild Wild West",
@@ -218,12 +213,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
+            "id": "C",
+            "text": "World Wide Web",
+            "isCorrect": true
+          },
+          {
             "id": "D",
             "text": "World Wide Fund for Nature",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. World Wide Web"
+        "correctAnswerText": "World Wide Web"
       },
       {
         "id": "test-1-q8",
@@ -234,27 +234,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
+            "id": "A",
+            "text": "john.smith@email.com",
+            "isCorrect": false
+          },
+          {
             "id": "B",
             "text": "#twitter",
             "isCorrect": false
           },
           {
-            "id": "B",
-            "text": "john.smith@email.com",
+            "id": "C",
+            "text": "☺",
             "isCorrect": false
           },
           {
             "id": "D",
             "text": "http://www.microsoft.com",
             "isCorrect": true
-          },
-          {
-            "id": "C",
-            "text": "☺",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "D. http://www.microsoft.com"
+        "correctAnswerText": "http://www.microsoft.com"
       },
       {
         "id": "test-1-q9",
@@ -270,13 +270,13 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "C",
-            "text": "OneDrive",
+            "id": "B",
+            "text": "Skype",
             "isCorrect": false
           },
           {
-            "id": "B",
-            "text": "Skype",
+            "id": "C",
+            "text": "OneDrive",
             "isCorrect": false
           },
           {
@@ -285,7 +285,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. Internet Explorer"
+        "correctAnswerText": "Internet Explorer"
       },
       {
         "id": "test-1-q10",
@@ -296,9 +296,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Local area nature (tính chất khu vực địa phương)",
-            "isCorrect": false
+            "id": "A",
+            "text": "Local area network (mạng cục bộ)",
+            "isCorrect": true
           },
           {
             "id": "B",
@@ -311,12 +311,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Local area network (mạng cục bộ)",
-            "isCorrect": true
+            "id": "D",
+            "text": "Local area nature (tính chất khu vực địa phương)",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. Local area network (mạng cục bộ)"
+        "correctAnswerText": "Local area network (mạng cục bộ)"
       },
       {
         "id": "test-1-q11",
@@ -332,11 +332,6 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "D",
-            "text": "Internet",
-            "isCorrect": true
-          },
-          {
             "id": "B",
             "text": "FTP",
             "isCorrect": false
@@ -345,9 +340,14 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "C",
             "text": "Các mạng trong tòa nhà văn phòng của bạn",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "Internet",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Internet"
+        "correctAnswerText": "Internet"
       },
       {
         "id": "test-1-q12",
@@ -358,14 +358,14 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Google",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "ping",
             "isCorrect": true
+          },
+          {
+            "id": "B",
+            "text": "FTP",
+            "isCorrect": false
           },
           {
             "id": "C",
@@ -373,12 +373,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "B",
-            "text": "FTP",
+            "id": "D",
+            "text": "Google",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. ping"
+        "correctAnswerText": "ping"
       },
       {
         "id": "test-1-q13",
@@ -394,13 +394,13 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "C",
-            "text": "Instagram",
+            "id": "B",
+            "text": "#hashtag",
             "isCorrect": false
           },
           {
-            "id": "B",
-            "text": "#hashtag",
+            "id": "C",
+            "text": "Instagram",
             "isCorrect": false
           },
           {
@@ -409,7 +409,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. John.Smith@example.com"
+        "correctAnswerText": "John.Smith@example.com"
       },
       {
         "id": "test-1-q14",
@@ -420,8 +420,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Google",
+            "id": "A",
+            "text": "Bing",
             "isCorrect": false
           },
           {
@@ -435,12 +435,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "Bing",
+            "id": "D",
+            "text": "Google",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Skype"
+        "correctAnswerText": "Skype"
       },
       {
         "id": "test-1-q15",
@@ -451,16 +451,6 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Skype",
-            "isCorrect": false
-          },
-          {
-            "id": "C",
-            "text": "Android",
-            "isCorrect": true
-          },
-          {
             "id": "A",
             "text": "Bing",
             "isCorrect": false
@@ -469,9 +459,19 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "B",
             "text": "Facebook",
             "isCorrect": false
+          },
+          {
+            "id": "C",
+            "text": "Android",
+            "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Skype",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Android"
+        "correctAnswerText": "Android"
       },
       {
         "id": "test-1-q16",
@@ -482,13 +482,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "D",
-            "text": "Các mạng toàn cầu kết nối với nhau mà sử dụng giao thức truyền thông theo một tiêu chuẩn để trao đổi dữ liệu và thông tin giữa chúng.",
-            "isCorrect": true
-          },
-          {
-            "id": "C",
-            "text": "Mỗi website và trang web trên thế giới",
+            "id": "A",
+            "text": "Một mạng với nhiều máy tính và các thiết bị",
             "isCorrect": false
           },
           {
@@ -497,12 +492,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "Một mạng với nhiều máy tính và các thiết bị",
+            "id": "C",
+            "text": "Mỗi website và trang web trên thế giới",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "Các mạng toàn cầu kết nối với nhau mà sử dụng giao thức truyền thông theo một tiêu chuẩn để trao đổi dữ liệu và thông tin giữa chúng.",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "B. Các mạng vật lý của máy tính và các thiết bị (điện thoại thông minh, máy tính bảng, vv) trên khắp thế giới, D. Các mạng toàn cầu kết nối với nhau mà sử dụng giao thức truyền thông theo một tiêu chuẩn để trao đổi dữ liệu và thông tin giữa chúng."
+        "correctAnswerText": "Các mạng vật lý của máy tính và các thiết bị (điện thoại thông minh, máy tính bảng, vv) trên khắp thế giới, Các mạng toàn cầu kết nối với nhau mà sử dụng giao thức truyền thông theo một tiêu chuẩn để trao đổi dữ liệu và thông tin giữa chúng."
       },
       {
         "id": "test-1-q17",
@@ -512,6 +512,11 @@ export const TEST_SUITES: TestSuite[] = [
         "prompt": "URL là gì? (Chọn tất cả áp dụng.)",
         "type": "multiple",
         "options": [
+          {
+            "id": "A",
+            "text": "Địa chỉ của một Website hoặc một trang web trên WWW",
+            "isCorrect": true
+          },
           {
             "id": "B",
             "text": "Uniform Resource Locator",
@@ -526,14 +531,9 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "D",
             "text": "Địa chỉ của một máy chủ web (WebServer)",
             "isCorrect": false
-          },
-          {
-            "id": "A",
-            "text": "Địa chỉ của một Website hoặc một trang web trên WWW",
-            "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. Địa chỉ của một Website hoặc một trang web trên WWW, B. Uniform Resource Locator"
+        "correctAnswerText": "Địa chỉ của một Website hoặc một trang web trên WWW, Uniform Resource Locator"
       },
       {
         "id": "test-1-q18",
@@ -543,11 +543,6 @@ export const TEST_SUITES: TestSuite[] = [
         "prompt": "Trình duyệt web là gì? (Chọn tất cả áp dụng.)",
         "type": "multiple",
         "options": [
-          {
-            "id": "C",
-            "text": "Một ứng dụng mà bạn có thể sử dụng để gửi các thông tin email",
-            "isCorrect": false
-          },
           {
             "id": "A",
             "text": "Một ứng dụng mà bạn có thể sử dụng để truy cập Internet",
@@ -559,12 +554,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
+            "id": "C",
+            "text": "Một ứng dụng mà bạn có thể sử dụng để gửi các thông tin email",
+            "isCorrect": false
+          },
+          {
             "id": "D",
             "text": "Một ứng dụng sẽ hiển thị một trang web trên một máy tính hoặc thiết bị di động",
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "B. Phần mềm được sử dụng để duyêt các website và các trang web được tìm thấy trên World Wide Web., D. Một ứng dụng sẽ hiển thị một trang web trên một máy tính hoặc thiết bị di động"
+        "correctAnswerText": "Phần mềm được sử dụng để duyêt các website và các trang web được tìm thấy trên World Wide Web., Một ứng dụng sẽ hiển thị một trang web trên một máy tính hoặc thiết bị di động"
       },
       {
         "id": "test-1-q19",
@@ -575,13 +575,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "D",
-            "text": "Ổ đĩa flash USB",
-            "isCorrect": true
-          },
-          {
-            "id": "C",
-            "text": "DVD",
+            "id": "A",
+            "text": "SSD",
             "isCorrect": true
           },
           {
@@ -590,12 +585,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "SSD",
+            "id": "C",
+            "text": "DVD",
+            "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Ổ đĩa flash USB",
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. SSD, C. DVD, D. Ổ đĩa flash USB"
+        "correctAnswerText": "SSD, DVD, Ổ đĩa flash USB"
       },
       {
         "id": "test-1-q20",
@@ -606,8 +606,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "D",
-            "text": "Card âm thanh",
+            "id": "A",
+            "text": "SSD",
             "isCorrect": false
           },
           {
@@ -621,12 +621,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "SSD",
+            "id": "D",
+            "text": "Card âm thanh",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "B. Loa, C. Webcam"
+        "correctAnswerText": "Loa, Webcam"
       },
       {
         "id": "test-1-q21",
@@ -647,17 +647,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "D",
-            "text": "Bàn phím",
-            "isCorrect": false
-          },
-          {
             "id": "C",
             "text": "Microphone",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "Bàn phím",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. Màn hình, B. Loa"
+        "correctAnswerText": "Màn hình, Loa"
       },
       {
         "id": "test-1-q22",
@@ -668,9 +668,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Máy chủ",
-            "isCorrect": true
+            "id": "A",
+            "text": "Máy Tính Xách Tay",
+            "isCorrect": false
           },
           {
             "id": "B",
@@ -683,12 +683,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Máy Tính Xách Tay",
-            "isCorrect": false
+            "id": "D",
+            "text": "Máy chủ",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Máy chủ"
+        "correctAnswerText": "Máy chủ"
       },
       {
         "id": "test-1-q23",
@@ -709,17 +709,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "D",
-            "text": "Cấu hình phần mềm tối thiểu trên máy tính của bạn cần có để chạy một ứng dụng",
-            "isCorrect": false
-          },
-          {
             "id": "C",
             "text": "Cấu hình tốt nhất trên máy tính của bạn nên có để chạy một ứng dụng",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "Cấu hình phần mềm tối thiểu trên máy tính của bạn cần có để chạy một ứng dụng",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "B. Cấu hình phần cứng tối thiểu và tài nguyên phần mềm khác trên máy tính của bạn cần có để chạy một ứng dụng"
+        "correctAnswerText": "Cấu hình phần cứng tối thiểu và tài nguyên phần mềm khác trên máy tính của bạn cần có để chạy một ứng dụng"
       },
       {
         "id": "test-1-q24",
@@ -750,7 +750,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. Thời gian thực., B. Đa nhiệm."
+        "correctAnswerText": "Thời gian thực., Đa nhiệm."
       },
       {
         "id": "test-1-q25",
@@ -766,13 +766,13 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "C",
-            "text": "Khi loại bỏ các ứng dụng",
+            "id": "B",
+            "text": "EULA",
             "isCorrect": false
           },
           {
-            "id": "B",
-            "text": "EULA",
+            "id": "C",
+            "text": "Khi loại bỏ các ứng dụng",
             "isCorrect": false
           },
           {
@@ -781,7 +781,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. Thư mục cài đặt, D. Shortcut nào được cài đặt"
+        "correctAnswerText": "Thư mục cài đặt, Shortcut nào được cài đặt"
       },
       {
         "id": "test-1-q26",
@@ -792,27 +792,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "B",
-            "text": "Phần mềm được chạy khi hệ điều hành khởi động",
-            "isCorrect": false
-          },
-          {
-            "id": "D",
-            "text": "Hệ thống xuất nhập cơ bản",
-            "isCorrect": true
-          },
-          {
             "id": "A",
             "text": "Firmware với giao diện người dùng",
             "isCorrect": true
           },
           {
+            "id": "B",
+            "text": "Phần mềm được chạy khi hệ điều hành khởi động",
+            "isCorrect": false
+          },
+          {
             "id": "C",
             "text": "Firmware phụ trách việc khởi tạo và kiểm tra tất cả các thành phần phần cứng của máy tính",
             "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Hệ thống xuất nhập cơ bản",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. Firmware với giao diện người dùng, C. Firmware phụ trách việc khởi tạo và kiểm tra tất cả các thành phần phần cứng của máy tính, D. Hệ thống xuất nhập cơ bản"
+        "correctAnswerText": "Firmware với giao diện người dùng, Firmware phụ trách việc khởi tạo và kiểm tra tất cả các thành phần phần cứng của máy tính, Hệ thống xuất nhập cơ bản"
       },
       {
         "id": "test-1-q27",
@@ -823,27 +823,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
+            "id": "A",
+            "text": "Để mất nó khi máy tính của bạn bị hỏng",
+            "isCorrect": false
+          },
+          {
             "id": "B",
             "text": "Để có thể khôi phục lại khi máy tính của bạn bị hòng",
+            "isCorrect": true
+          },
+          {
+            "id": "C",
+            "text": "Để có thể khôi phục lại khi máy tính của bạn bị mất cắp",
             "isCorrect": true
           },
           {
             "id": "D",
             "text": "Để có nó trong lưu trữ đám mây",
             "isCorrect": false
-          },
-          {
-            "id": "A",
-            "text": "Để mất nó khi máy tính của bạn bị hỏng",
-            "isCorrect": false
-          },
-          {
-            "id": "C",
-            "text": "Để có thể khôi phục lại khi máy tính của bạn bị mất cắp",
-            "isCorrect": true
           }
         ],
-        "correctAnswerText": "B. Để có thể khôi phục lại khi máy tính của bạn bị hòng, C. Để có thể khôi phục lại khi máy tính của bạn bị mất cắp"
+        "correctAnswerText": "Để có thể khôi phục lại khi máy tính của bạn bị hòng, Để có thể khôi phục lại khi máy tính của bạn bị mất cắp"
       },
       {
         "id": "test-1-q28",
@@ -854,27 +854,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
+            "id": "A",
+            "text": "Có kết quả về một chủ đề nhất định",
+            "isCorrect": false
+          },
+          {
             "id": "B",
             "text": "Có kết quả từ một trang web hoặc tên miền nhất định",
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "Có kết quả về một chủ đề nhất định",
+            "id": "C",
+            "text": "Không bao gồm các kết quả từ một trang web hoặc tên miền nhất định",
             "isCorrect": false
           },
           {
             "id": "D",
             "text": "Giúp bạn tìm thấy giá trên một tên miền nhất định",
             "isCorrect": false
-          },
-          {
-            "id": "C",
-            "text": "Không bao gồm các kết quả từ một trang web hoặc tên miền nhất định",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "B. Có kết quả từ một trang web hoặc tên miền nhất định"
+        "correctAnswerText": "Có kết quả từ một trang web hoặc tên miền nhất định"
       },
       {
         "id": "test-1-q29",
@@ -885,9 +885,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "D",
-            "text": "Một công cụ để giảm lượng truy cập của trang web của nhà quảng cáo",
-            "isCorrect": false
+            "id": "A",
+            "text": "Một quảng cáo được nhúng vào một trang web",
+            "isCorrect": true
           },
           {
             "id": "B",
@@ -895,17 +895,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Một quảng cáo được nhúng vào một trang web",
-            "isCorrect": true
-          },
-          {
             "id": "C",
             "text": "Một công cụ để thu hút nhiều lượt truy cập đến trang web của nhà quảng cáo",
             "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Một công cụ để giảm lượng truy cập của trang web của nhà quảng cáo",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "A. Một quảng cáo được nhúng vào một trang web, C. Một công cụ để thu hút nhiều lượt truy cập đến trang web của nhà quảng cáo"
+        "correctAnswerText": "Một quảng cáo được nhúng vào một trang web, Một công cụ để thu hút nhiều lượt truy cập đến trang web của nhà quảng cáo"
       },
       {
         "id": "test-1-q30",
@@ -916,27 +916,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "C",
-            "text": "^",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "$",
-            "isCorrect": true
-          },
-          {
-            "id": "D",
-            "text": "\"\"",
             "isCorrect": true
           },
           {
             "id": "B",
             "text": "\\",
             "isCorrect": false
+          },
+          {
+            "id": "C",
+            "text": "^",
+            "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "\"\"",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. $, D. \"\""
+        "correctAnswerText": "$, \"\""
       },
       {
         "id": "test-1-q31",
@@ -946,6 +946,11 @@ export const TEST_SUITES: TestSuite[] = [
         "prompt": "Việc sử dụng đúng các * (dấu sao) khi tìm kiếm trên Google hay Bing có ý nghĩa gì?",
         "type": "single",
         "options": [
+          {
+            "id": "A",
+            "text": "Thêm nó để đặt một từ hoặc cụm từ trong dấu ngoặc kép.",
+            "isCorrect": false
+          },
           {
             "id": "B",
             "text": "Thêm nó như là công cụ để tìm giá.",
@@ -957,17 +962,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "Thêm nó để đặt một từ hoặc cụm từ trong dấu ngoặc kép.",
-            "isCorrect": false
-          },
-          {
             "id": "D",
             "text": "Thêm nó để tìm các chủ đề theo xu hướng trên các mạng xã hội như Twitter.",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Thêm nó như là một đại diện cho bất kỳ nội dung chưa biết."
+        "correctAnswerText": "Thêm nó như là một đại diện cho bất kỳ nội dung chưa biết."
       },
       {
         "id": "test-1-q32",
@@ -978,9 +978,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "C",
-            "text": "Bing",
-            "isCorrect": true
+            "id": "A",
+            "text": "Facebook",
+            "isCorrect": false
           },
           {
             "id": "B",
@@ -988,17 +988,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "D",
-            "text": "Yahoo!",
+            "id": "C",
+            "text": "Bing",
             "isCorrect": true
           },
           {
-            "id": "A",
-            "text": "Facebook",
-            "isCorrect": false
+            "id": "D",
+            "text": "Yahoo!",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "B. Google, C. Bing, D. Yahoo!"
+        "correctAnswerText": "Google, Bing, Yahoo!"
       },
       {
         "id": "test-1-q33",
@@ -1009,27 +1009,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "C",
-            "text": "Bing",
-            "isCorrect": true
-          },
-          {
             "id": "A",
             "text": "Facebook",
             "isCorrect": false
           },
           {
-            "id": "D",
-            "text": "Yahoo!",
-            "isCorrect": true
-          },
-          {
             "id": "B",
             "text": "Google",
             "isCorrect": true
+          },
+          {
+            "id": "C",
+            "text": "Bing",
+            "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Yahoo!",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "B. Google, C. Bing, D. Yahoo!"
+        "correctAnswerText": "Google, Bing, Yahoo!"
       },
       {
         "id": "test-1-q34",
@@ -1040,13 +1040,8 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "C",
-            "text": "Các URL",
-            "isCorrect": true
-          },
-          {
-            "id": "D",
-            "text": "Các mô tả",
+            "id": "A",
+            "text": "Các tiêu đề",
             "isCorrect": true
           },
           {
@@ -1055,12 +1050,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Các tiêu đề",
+            "id": "C",
+            "text": "Các URL",
+            "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Các mô tả",
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. Các tiêu đề, C. Các URL, D. Các mô tả"
+        "correctAnswerText": "Các tiêu đề, Các URL, Các mô tả"
       },
       {
         "id": "test-1-q35",
@@ -1071,14 +1071,14 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "B",
-            "text": "Cho đến khi bạn nhấn Alt + F4 trên bàn phím",
+            "id": "A",
+            "text": "Cho đến khi bạn cập nhật hệ điều hành",
             "isCorrect": false
           },
           {
-            "id": "D",
-            "text": "Cho đến khi bạn sử dụng lệnh Paste",
-            "isCorrect": true
+            "id": "B",
+            "text": "Cho đến khi bạn nhấn Alt + F4 trên bàn phím",
+            "isCorrect": false
           },
           {
             "id": "C",
@@ -1086,12 +1086,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Cho đến khi bạn cập nhật hệ điều hành",
-            "isCorrect": false
+            "id": "D",
+            "text": "Cho đến khi bạn sử dụng lệnh Paste",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Cho đến khi bạn sử dụng lệnh Paste"
+        "correctAnswerText": "Cho đến khi bạn sử dụng lệnh Paste"
       },
       {
         "id": "test-1-q36",
@@ -1102,9 +1102,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Th1s1 $ Year2015",
-            "isCorrect": true
+            "id": "A",
+            "text": "1234567",
+            "isCorrect": false
           },
           {
             "id": "B",
@@ -1117,12 +1117,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "1234567",
-            "isCorrect": false
+            "id": "D",
+            "text": "Th1s1 $ Year2015",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Th1s1 $ Year2015"
+        "correctAnswerText": "Th1s1 $ Year2015"
       },
       {
         "id": "test-1-q37",
@@ -1133,27 +1133,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "B",
-            "text": "tracert",
-            "isCorrect": false
-          },
-          {
-            "id": "D",
-            "text": "ping",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "ipconfig",
+            "isCorrect": false
+          },
+          {
+            "id": "B",
+            "text": "tracert",
             "isCorrect": false
           },
           {
             "id": "C",
             "text": "ipconfig / all",
             "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "ping",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. ipconfig / all"
+        "correctAnswerText": "ipconfig / all"
       },
       {
         "id": "test-1-q38",
@@ -1164,9 +1164,9 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "Tạo một kết nối point-to-point trên mạng công cộng",
-            "isCorrect": true
+            "id": "A",
+            "text": "Bảo vệ một mạng từ khác",
+            "isCorrect": false
           },
           {
             "id": "B",
@@ -1174,17 +1174,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "Bảo vệ một mạng từ khác",
-            "isCorrect": false
-          },
-          {
             "id": "C",
             "text": "Mã hóa các gói dữ liệu từ các thiết bị nhận và gửi",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "Tạo một kết nối point-to-point trên mạng công cộng",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. Tạo một kết nối point-to-point trên mạng công cộng"
+        "correctAnswerText": "Tạo một kết nối point-to-point trên mạng công cộng"
       },
       {
         "id": "test-1-q39",
@@ -1195,16 +1195,6 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "WPA2",
-            "isCorrect": true
-          },
-          {
-            "id": "C",
-            "text": "WEP",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "TCP / IP",
             "isCorrect": false
@@ -1213,9 +1203,19 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "B",
             "text": "WPA",
             "isCorrect": false
+          },
+          {
+            "id": "C",
+            "text": "WEP",
+            "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "WPA2",
+            "isCorrect": true
           }
         ],
-        "correctAnswerText": "D. WPA2"
+        "correctAnswerText": "WPA2"
       },
       {
         "id": "test-1-q40",
@@ -1226,14 +1226,14 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
+            "id": "A",
+            "text": "802.11ac",
+            "isCorrect": true
+          },
+          {
             "id": "B",
             "text": "802.11cd",
             "isCorrect": false
-          },
-          {
-            "id": "D",
-            "text": "802.11n",
-            "isCorrect": true
           },
           {
             "id": "C",
@@ -1241,12 +1241,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "A",
-            "text": "802.11ac",
+            "id": "D",
+            "text": "802.11n",
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "A. 802.11ac, D. 802.11n"
+        "correctAnswerText": "802.11ac, 802.11n"
       },
       {
         "id": "test-1-q41",
@@ -1417,6 +1417,11 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
+            "id": "B",
+            "text": "Virus Windows",
+            "isCorrect": false
+          },
+          {
             "id": "C",
             "text": "Công cụ để giữ Windows cập nhật",
             "isCorrect": true
@@ -1425,14 +1430,9 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "D",
             "text": "Công cụ khôi phục dữ liệu cho Windows",
             "isCorrect": false
-          },
-          {
-            "id": "B",
-            "text": "Virus Windows",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Công cụ để giữ Windows cập nhật"
+        "correctAnswerText": "Công cụ để giữ Windows cập nhật"
       },
       {
         "id": "test-1-q47",
@@ -1567,11 +1567,6 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "D",
-            "text": "SSD",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "GHz",
             "isCorrect": false
@@ -1585,9 +1580,14 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "C",
             "text": "Số lượng lõi",
             "isCorrect": false
+          },
+          {
+            "id": "D",
+            "text": "SSD",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "B. GB"
+        "correctAnswerText": "GB"
       },
       {
         "id": "test-1-q52",
@@ -1598,27 +1598,27 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "single",
         "options": [
           {
-            "id": "B",
-            "text": "Một loại phần cứng",
-            "isCorrect": false
-          },
-          {
             "id": "A",
             "text": "Một bản quyền thương mại cho phần mềm",
             "isCorrect": false
           },
           {
-            "id": "D",
-            "text": "Một trình duyệt web",
+            "id": "B",
+            "text": "Một loại phần cứng",
             "isCorrect": false
           },
           {
             "id": "C",
             "text": "Một loại bản quyền phần mềm",
             "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Một trình duyệt web",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Một loại bản quyền phần mềm"
+        "correctAnswerText": "Một loại bản quyền phần mềm"
       },
       {
         "id": "test-1-q53",
@@ -1628,6 +1628,11 @@ export const TEST_SUITES: TestSuite[] = [
         "prompt": "Những chương trình nào sau đây bạn có thể sử dụng để xem các ứng dụng đang chạy trên máy tính Windows của bạn?",
         "type": "single",
         "options": [
+          {
+            "id": "A",
+            "text": "Windows Update",
+            "isCorrect": false
+          },
           {
             "id": "B",
             "text": "Windows Media Player",
@@ -1642,14 +1647,9 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "D",
             "text": "Control Panel",
             "isCorrect": false
-          },
-          {
-            "id": "A",
-            "text": "Windows Update",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Task Manager"
+        "correctAnswerText": "Task Manager"
       },
       {
         "id": "test-1-q54",
@@ -1670,17 +1670,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
-            "id": "D",
-            "text": "Control Panel",
-            "isCorrect": false
-          },
-          {
             "id": "C",
             "text": "Task Manager",
             "isCorrect": true
+          },
+          {
+            "id": "D",
+            "text": "Control Panel",
+            "isCorrect": false
           }
         ],
-        "correctAnswerText": "C. Task Manager"
+        "correctAnswerText": "Task Manager"
       },
       {
         "id": "test-1-q55",
@@ -1742,7 +1742,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Table, Query, Report"
+        "correctAnswerText": "Query, Report, Table"
       },
       {
         "id": "test-1-q57",
@@ -2175,7 +2175,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Trình điều khiển đó có tương thích với các phiên bản chính xác của hệ điều hành bạn đang sử dụng, Trình điều khiển đó có được làm cho đúng thành phần phần cứng mà bạn đang sử dụng"
+        "correctAnswerText": "Trình điều khiển đó có được làm cho đúng thành phần phần cứng mà bạn đang sử dụng, Trình điều khiển đó có tương thích với các phiên bản chính xác của hệ điều hành bạn đang sử dụng"
       },
       {
         "id": "test-2-q11",
@@ -2423,7 +2423,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Firmware với giao diện người dùng, Firmware phụ trách việc khởi tạo và kiểm tra tất cả các thành phần phần cứng của máy tính, Hệ thống xuất nhập cơ bản"
+        "correctAnswerText": "Firmware phụ trách việc khởi tạo và kiểm tra tất cả các thành phần phần cứng của máy tính, Firmware với giao diện người dùng, Hệ thống xuất nhập cơ bản"
       },
       {
         "id": "test-2-q19",
@@ -2733,7 +2733,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Chọn các tập tin, nhấn Shift + Delete trên bàn phím của bạn, và ghi đè lên phần của ổ đĩa đã lưu nhiều lần với nội dung của các tập tin khác., Sử dụng một ứng dụng như CCleaner hoặc File Shredder để xóa sạch không gian trống trên đĩa cứng của bạn nhiều lần để xóa dữ liệu không còn khả năng phục hồi."
+        "correctAnswerText": "Sử dụng một ứng dụng như CCleaner hoặc File Shredder để xóa sạch không gian trống trên đĩa cứng của bạn nhiều lần để xóa dữ liệu không còn khả năng phục hồi., Chọn các tập tin, nhấn Shift + Delete trên bàn phím của bạn, và ghi đè lên phần của ổ đĩa đã lưu nhiều lần với nội dung của các tập tin khác."
       },
       {
         "id": "test-2-q29",
@@ -3067,14 +3067,9 @@ export const TEST_SUITES: TestSuite[] = [
             "id": "E",
             "text": "Motion Paths",
             "isCorrect": true
-          },
-          {
-            "id": "F",
-            "text": "Fast",
-            "isCorrect": false
           }
         ],
-        "correctAnswerText": "Entrance, Motion Paths, Emphasis, Exit"
+        "correctAnswerText": "Exit, Emphasis, Entrance, Motion Paths"
       },
       {
         "id": "test-2-q40",
@@ -4561,7 +4556,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "Các mạng vật lý của máy tính và các thiết bị (điện thoại thông minh, máy tính bảng, vv) trên khắp thế giới, Mỗi website và trang web trên thế giới"
+        "correctAnswerText": "Mỗi website và trang web trên thế giới, Các mạng vật lý của máy tính và các thiết bị (điện thoại thông minh, máy tính bảng, vv) trên khắp thế giới"
       },
       {
         "id": "test-3-q28",
@@ -4716,7 +4711,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Kiểm tra xem màn hình được bật chưa., Kiểm tra xem màn hình được kết nối đúng với máy tính chưa., Kiểm tra xem màn hình đã được gắn đúng vào ổ cắm điện không"
+        "correctAnswerText": "Kiểm tra xem màn hình được kết nối đúng với máy tính chưa., Kiểm tra xem màn hình được bật chưa., Kiểm tra xem màn hình đã được gắn đúng vào ổ cắm điện không"
       },
       {
         "id": "test-3-q33",
@@ -5016,7 +5011,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "SSD, DVD, Ổ đĩa flash USB"
+        "correctAnswerText": "Ổ đĩa flash USB, SSD, DVD"
       },
       {
         "id": "test-3-q43",
@@ -5712,7 +5707,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Google, Bing, Yahoo!"
+        "correctAnswerText": "Bing, Google, Yahoo!"
       },
       {
         "id": "test-4-q5",
@@ -5774,7 +5769,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Cho phép bạn trao đổi tin nhắn kỹ thuật số với những người khác, Yêu cầu một tên người dùng và mật khẩu để được sử dụng, Yêu cầu bạn cung cấp địa chỉ email của người mà bạn muốn gửi tin nhắn cho"
+        "correctAnswerText": "Yêu cầu một tên người dùng và mật khẩu để được sử dụng, Yêu cầu bạn cung cấp địa chỉ email của người mà bạn muốn gửi tin nhắn cho, Cho phép bạn trao đổi tin nhắn kỹ thuật số với những người khác"
       },
       {
         "id": "test-4-q7",
@@ -6916,7 +6911,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           }
         ],
-        "correctAnswerText": "Date, From"
+        "correctAnswerText": "From, Date"
       },
       {
         "id": "test-4-q44",
@@ -7566,7 +7561,7 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "Color Scheme, Color Effect"
+        "correctAnswerText": "Color Effect, Color Scheme"
       },
       {
         "id": "test-5-q5",
@@ -8270,6 +8265,11 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
+            "id": "A",
+            "text": "RAM",
+            "isCorrect": true
+          },
+          {
             "id": "B",
             "text": "Chuột (Mouse)",
             "isCorrect": false
@@ -8280,17 +8280,12 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": true
           },
           {
-            "id": "C",
-            "text": "RAM",
-            "isCorrect": true
-          },
-          {
             "id": "D",
             "text": "Máy in",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "RAM, C. CPU"
+        "correctAnswerText": "RAM, CPU"
       },
       {
         "id": "test-5-q29",
@@ -8301,12 +8296,7 @@ export const TEST_SUITES: TestSuite[] = [
         "type": "multiple",
         "options": [
           {
-            "id": "C",
-            "text": "CPU",
-            "isCorrect": true
-          },
-          {
-            "id": "B",
+            "id": "A",
             "text": "RAM",
             "isCorrect": true
           },
@@ -8316,12 +8306,17 @@ export const TEST_SUITES: TestSuite[] = [
             "isCorrect": false
           },
           {
+            "id": "C",
+            "text": "CPU",
+            "isCorrect": true
+          },
+          {
             "id": "D",
             "text": "Máy in",
             "isCorrect": false
           }
         ],
-        "correctAnswerText": "RAM, C. CPU"
+        "correctAnswerText": "RAM, CPU"
       },
       {
         "id": "test-5-q30",

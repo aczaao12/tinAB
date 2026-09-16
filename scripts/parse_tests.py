@@ -30,7 +30,6 @@ def parse_pdf(pdf_path):
     with open(tmp_layout, "r", encoding="utf-8") as f:
         text = f.read()
         
-    # Clean page headers, moodle footers and jump-to
     text = re.sub(r"\d{1,2}/\d{1,2}/\d{2,4},\s*\d{1,2}:\d{2}\s*(?:AM|PM)\s+TEST \d+: Attempt review\s*", "", text)
     text = re.sub(r"192\.168\.\d+\.\d+/moodle[^\n]*\s+\d+/\d+\s*(\x0c)?", "", text)
     text = re.sub(r"(?:◄\s*TEST\s*\d+\s*)?Jump to\.\.\..*", "", text, flags=re.DOTALL)
@@ -42,12 +41,10 @@ def parse_pdf(pdf_path):
         q_idx = int(parts[i])
         q_body = parts[i+1]
         
-        # Clean status line
         q_body_clean = re.sub(r"^\s*(?:Not answered|Correct|Incorrect|Partially correct)\s*\n\s*Marked out of [0-9.]+\s*\n*", "", q_body)
         
         sel_match = re.search(r"\n\s*(Select one(?: or more)?):\s*\n", q_body_clean)
         if not sel_match:
-            print(f"Warning: No selector found in {pdf_path} Q{q_idx}")
             continue
             
         selector_str = sel_match.group(1)
@@ -59,7 +56,6 @@ def parse_pdf(pdf_path):
         rest = q_body_clean[sel_match.end():]
         ans_match = re.search(r"\n\s*The correct answers? (?:is|are):\s*", rest)
         if not ans_match:
-            print(f"Warning: No answer found in {pdf_path} Q{q_idx}")
             continue
             
         opts_raw = rest[:ans_match.start()]
@@ -69,19 +65,29 @@ def parse_pdf(pdf_path):
         
         opt_chunks = [clean_spaces(c) for c in re.split(r"\n\s*\n+", opts_raw) if clean_spaces(c)]
         
-        options = []
-        for opt_idx, opt_text in enumerate(opt_chunks):
-            pref_m = re.match(r"^([A-E])\.\s*(.*)", opt_text)
-            if pref_m:
-                opt_letter = pref_m.group(1)
-                opt_content = pref_m.group(2).strip()
-            else:
-                opt_letter = chr(ord("A") + opt_idx)
-                opt_content = opt_text.strip()
-                
+        raw_letters = []
+        for opt_text in opt_chunks:
+            m = re.match(r"^([A-E])\.\s*", opt_text)
+            raw_letters.append(m.group(1) if m else None)
+            
+        all_possible = ["A", "B", "C", "D", "E"][:len(opt_chunks)]
+        assigned_letters = []
+        if any(raw_letters):
+            used = set(l for l in raw_letters if l)
+            missing = [l for l in all_possible if l not in used]
+            for l in raw_letters:
+                if l:
+                    assigned_letters.append(l)
+                else:
+                    assigned_letters.append(missing.pop(0) if missing else "X")
+        else:
+            assigned_letters = all_possible
+            
+        opts = []
+        for letter, opt_text in zip(assigned_letters, opt_chunks):
+            content = strip_prefix(opt_text)
             opt_core = strip_prefix(opt_text)
             ans_core = strip_prefix(ans_raw)
-            
             is_corr = False
             if not is_multiple:
                 if opt_text == ans_raw or opt_core == ans_core:
@@ -90,15 +96,22 @@ def parse_pdf(pdf_path):
                 ans_items = [strip_prefix(clean_spaces(x)) for x in ans_raw.split(",")]
                 if opt_text == ans_raw or opt_core == ans_core or opt_core in ans_raw or opt_text in ans_raw or any(opt_core == it for it in ans_items):
                     is_corr = True
-                    
-            options.append({
-                "id": opt_letter,
-                "text": opt_content if pref_m else opt_text,
+            opts.append({
+                "originalLetter": letter,
+                "text": content,
                 "isCorrect": is_corr
             })
             
-        corr_count = sum(1 for o in options if o["isCorrect"])
+        opts.sort(key=lambda x: x["originalLetter"])
+        for idx, opt in enumerate(opts):
+            opt["id"] = chr(ord("A") + idx)
+            
+        corr_count = sum(1 for o in opts if o["isCorrect"])
         q_type = "multiple" if (is_multiple or corr_count > 1) else "single"
+        
+        # Format clean explanation answer string
+        clean_ans_items = [o["text"] for o in opts if o["isCorrect"]]
+        display_answer = ", ".join(clean_ans_items) if clean_ans_items else ans_raw
         
         questions.append({
             "id": f"{test_id}-q{q_idx}",
@@ -107,8 +120,8 @@ def parse_pdf(pdf_path):
             "questionNumber": q_idx,
             "prompt": prompt,
             "type": q_type,
-            "options": options,
-            "correctAnswerText": ans_raw
+            "options": [{ "id": o["id"], "text": o["text"], "isCorrect": o["isCorrect"] } for o in opts],
+            "correctAnswerText": display_answer
         })
         
     return {

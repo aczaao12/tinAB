@@ -1,6 +1,7 @@
 import React from 'react';
 import type { AttemptRecord } from '../data/types';
 import { deleteAttempt, clearAllAttempts } from '../utils/storage';
+import { IconHistory, IconX, IconTrash, IconTimer, IconUser } from './icons';
 
 interface HistoryModalProps {
   isOpen: boolean;
@@ -35,7 +36,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    if (mins === 0) return `${secs} giây`;
+    if (mins === 0) return `${secs}s`;
     return `${mins}p ${secs}s`;
   };
 
@@ -65,7 +66,7 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
 
   return (
     <div
-      className="modal-overlay"
+      className="modal-backdrop"
       onClick={onClose}
       onKeyDown={(e) => e.key === 'Escape' && onClose()}
       role="dialog"
@@ -73,75 +74,52 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
       tabIndex={-1}
     >
       <div
-        className="modal-card"
+        className="modal-surface"
         onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '680px' }}
+        style={{ maxWidth: '640px' }}
       >
-        <div className="modal-header">
-          <h2 className="modal-title">📊 Lịch sử làm bài</h2>
-          <button className="btn-icon" onClick={onClose} aria-label="Đóng">
-            ✕
+        <div className="modal-head">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <IconHistory size={20} color="var(--accent-primary)" />
+            <h2 className="modal-heading">Lịch sử làm bài</h2>
+          </div>
+          <button className="btn-icon-square" onClick={onClose} aria-label="Đóng">
+            <IconX size={16} />
           </button>
         </div>
 
         {attempts.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>📝</div>
-            <p style={{ fontWeight: 600, fontSize: '1.1rem', color: 'var(--text-main)' }}>
-              Chưa có lịch sử làm bài nào
+          <div style={{ textAlign: 'center', padding: '2.5rem 1rem', color: 'var(--text-secondary)' }}>
+            <div style={{ marginBottom: '0.5rem', opacity: 0.5 }}>
+              <IconHistory size={40} />
+            </div>
+            <p style={{ fontWeight: 700, fontSize: '1rem', color: 'var(--text-primary)' }}>
+              Chưa có dữ liệu bài làm
             </p>
-            <p style={{ fontSize: '0.9rem', marginTop: '0.25rem' }}>
-              Hãy bắt đầu làm bài và nộp bài để xem lịch sử và tiến độ ở đây!
+            <p style={{ fontSize: '0.85rem', marginTop: '0.25rem' }}>
+              Kết quả các lần thi thử sẽ được lưu trữ tự động tại đây.
             </p>
           </div>
         ) : (
           <>
             {/* Statistics Bar */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(3, 1fr)',
-                gap: '0.75rem',
-                textAlign: 'center',
-              }}
-            >
-              <div
-                style={{
-                  background: 'var(--bg)',
-                  border: '1px solid var(--card-border)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--radius-md)',
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Số lần làm</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--primary)' }}>
+            <div className="stats-row">
+              <div className="stat-box">
+                <div className="stat-label">Lần thi</div>
+                <div className="stat-value" style={{ color: 'var(--accent-primary)' }}>
                   {attempts.length}
                 </div>
               </div>
-              <div
-                style={{
-                  background: 'var(--bg)',
-                  border: '1px solid var(--card-border)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--radius-md)',
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Điểm trung bình</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--warning)' }}>
-                  {avgScore}/10
+              <div className="stat-box">
+                <div className="stat-label">Trung bình</div>
+                <div className="stat-value" style={{ color: 'var(--accent-warning)' }}>
+                  {avgScore}đ
                 </div>
               </div>
-              <div
-                style={{
-                  background: 'var(--bg)',
-                  border: '1px solid var(--card-border)',
-                  padding: '0.75rem',
-                  borderRadius: 'var(--radius-md)',
-                }}
-              >
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Điểm cao nhất</div>
-                <div style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--success)' }}>
-                  {bestScore}/10
+              <div className="stat-box">
+                <div className="stat-label">Cao nhất</div>
+                <div className="stat-value" style={{ color: 'var(--accent-success)' }}>
+                  {bestScore}đ
                 </div>
               </div>
             </div>
@@ -151,57 +129,81 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 alignItems: 'center',
-                marginTop: '0.5rem',
+                fontSize: '0.8rem',
+                color: 'var(--text-tertiary)',
               }}
             >
-              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-                Lưu tối đa 50 lần gần nhất trên trình duyệt (LocalStorage)
-              </span>
+              <span>Lưu tối đa 50 lần gần nhất trên thiết bị</span>
               <button
-                className="btn btn-secondary"
-                style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem', color: 'var(--danger)' }}
+                className="btn-pill"
+                style={{ color: 'var(--accent-danger)', borderColor: 'var(--accent-danger-border)' }}
                 onClick={handleClearAll}
               >
-                🗑️ Xoá tất cả
+                <IconTrash size={13} />
+                <span>Xoá tất cả</span>
               </button>
             </div>
 
             {/* History List */}
-            <div className="history-list">
+            <div className="history-scroll">
               {attempts.map((item) => (
-                <div key={item.id} className="history-item">
-                  <div className="history-info">
+                <div key={item.id} className="history-card">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span className="history-title">{item.testTitle}</span>
+                      <span style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--text-primary)' }}>
+                        {item.testTitle}
+                      </span>
                       <span
-                        className={`badge ${item.mode === 'exam' ? 'badge-primary' : 'badge-info'}`}
-                        style={{ fontSize: '0.7rem' }}
+                        className={`pill-badge ${item.mode === 'exam' ? 'pill-primary' : 'pill-default'}`}
+                        style={{ fontSize: '0.65rem' }}
                       >
                         {item.mode === 'exam' ? 'Thi thử' : 'Ôn tập'}
                       </span>
                     </div>
-                    <div className="history-meta">
-                      <span>👤 {item.userName || 'Ẩn danh'}</span>
-                      <span>📅 {formatDate(item.timestamp)}</span>
-                      <span>⏱️ {formatTime(item.timeSpentSeconds)}</span>
+                    <div
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--text-secondary)',
+                        display: 'flex',
+                        gap: '0.65rem',
+                        alignItems: 'center',
+                        flexWrap: 'wrap',
+                      }}
+                    >
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <IconUser size={12} />
+                        {item.userName || 'Ẩn danh'}
+                      </span>
+                      <span>{formatDate(item.timestamp)}</span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.25rem' }}>
+                        <IconTimer size={12} />
+                        {formatTime(item.timeSpentSeconds)}
+                      </span>
                     </div>
                   </div>
 
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{ textAlign: 'right' }}>
-                      <div className="history-score">
+                      <div
+                        style={{
+                          fontSize: '1.25rem',
+                          fontWeight: 800,
+                          fontFamily: 'var(--font-mono)',
+                          color: 'var(--accent-primary)',
+                        }}
+                      >
                         {item.score}/{item.totalQuestions}
                       </div>
                       <div
                         style={{
-                          fontSize: '0.8rem',
+                          fontSize: '0.75rem',
                           fontWeight: 700,
                           color:
                             item.percentage >= 80
-                              ? 'var(--success)'
+                              ? 'var(--accent-success)'
                               : item.percentage >= 50
-                              ? 'var(--warning)'
-                              : 'var(--danger)',
+                              ? 'var(--accent-warning)'
+                              : 'var(--accent-danger)',
                         }}
                       >
                         {((item.score / item.totalQuestions) * 10).toFixed(1)}đ ({item.percentage}%)
@@ -209,12 +211,13 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
                     </div>
 
                     <button
-                      className="btn-icon"
-                      style={{ color: 'var(--danger)', borderColor: 'transparent' }}
+                      className="btn-icon-square"
+                      style={{ color: 'var(--text-tertiary)' }}
                       onClick={() => handleDelete(item.id)}
                       title="Xoá lần này"
+                      aria-label="Xoá lần thi này"
                     >
-                      ✕
+                      <IconX size={14} />
                     </button>
                   </div>
                 </div>
@@ -223,8 +226,8 @@ export const HistoryModal: React.FC<HistoryModalProps> = ({
           </>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
-          <button className="btn btn-secondary" onClick={onClose}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '0.25rem' }}>
+          <button className="btn-action btn-secondary" onClick={onClose}>
             Đóng
           </button>
         </div>

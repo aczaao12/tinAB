@@ -1,15 +1,27 @@
 import React from 'react';
 import type { TestSuite } from '../data/types';
+import {
+  IconTarget,
+  IconTimer,
+  IconShuffle,
+  IconHistory,
+  IconUser,
+  IconSun,
+  IconMoon,
+} from './icons';
 
 interface NavbarProps {
   testSuites: TestSuite[];
   selectedTestId: string;
+  isMistakePractice?: boolean;
+  mistakesCount?: number;
   mode: 'practice' | 'exam';
   userName: string;
   isShuffled: boolean;
   theme: string;
   timerSeconds: number;
   onSelectTest: (id: string) => void;
+  onExitMistakePractice?: () => void;
   onSelectMode: (mode: 'practice' | 'exam') => void;
   onToggleShuffle: () => void;
   onOpenNameModal: () => void;
@@ -20,12 +32,15 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({
   testSuites,
   selectedTestId,
+  isMistakePractice = false,
+  mistakesCount = 0,
   mode,
   userName,
   isShuffled,
   theme,
   timerSeconds,
   onSelectTest,
+  onExitMistakePractice,
   onSelectMode,
   onToggleShuffle,
   onOpenNameModal,
@@ -39,97 +54,126 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   return (
-    <header className="navbar">
-      <div className="nav-container">
-        {/* Brand */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-          <div className="brand">
-            <span className="brand-badge">tinAB</span>
-            <span className="brand-text">Ôn Tập Tin Học</span>
+    <header className="site-header">
+      <div className="header-inner">
+        {/* Brand & Test Picker */}
+        <div className="brand-group">
+          <div className="brand-mark">
+            <span className="brand-tag">tinAB</span>
+            <span className="desktop-only" style={{ fontWeight: 700, fontSize: '0.95rem' }}>
+              Trắc Nghiệm
+            </span>
           </div>
 
-          {/* Test selector */}
-          <select
-            className="select-input"
-            value={selectedTestId}
-            onChange={(e) => onSelectTest(e.target.value)}
-          >
-            {testSuites.map((suite) => (
-              <option key={suite.id} value={suite.id}>
-                {suite.shortTitle} ({suite.totalQuestions} câu)
-              </option>
-            ))}
-            <option value="all">Tất cả đề thi (338 câu)</option>
-          </select>
+          {isMistakePractice ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span className="pill-badge pill-warning">
+                Ôn {mistakesCount} câu sai
+              </span>
+              <button
+                className="btn-pill"
+                style={{ fontSize: '0.75rem', padding: '0.2rem 0.5rem' }}
+                onClick={onExitMistakePractice}
+                title="Quay lại toàn bộ bài thi"
+              >
+                ✕ Thoát
+              </button>
+            </div>
+          ) : (
+            <select
+              className="test-selector-dropdown"
+              value={selectedTestId}
+              onChange={(e) => onSelectTest(e.target.value)}
+            >
+              {testSuites.map((suite) => (
+                <option key={suite.id} value={suite.id}>
+                  {suite.shortTitle} ({suite.totalQuestions} câu)
+                </option>
+              ))}
+              <option value="all">Tất cả đề (338 câu)</option>
+            </select>
+          )}
         </div>
 
-        {/* Mode Selector */}
-        <div className="mode-tabs">
+        {/* Mode Segmented Control */}
+        <div className="segmented-control">
           <button
-            className={`mode-tab ${mode === 'practice' ? 'active' : ''}`}
+            className={`segmented-btn ${mode === 'practice' ? 'active' : ''}`}
             onClick={() => onSelectMode('practice')}
-            title="Chọn đáp án xem kết quả ngay lập tức"
+            title="Luyện tập xem đáp án ngay"
           >
-            🎯 Ôn tập
+            <IconTarget size={15} />
+            <span>Ôn tập</span>
           </button>
           <button
-            className={`mode-tab ${mode === 'exam' ? 'active' : ''}`}
+            className={`segmented-btn ${mode === 'exam' ? 'active' : ''}`}
             onClick={() => onSelectMode('exam')}
-            title="Đếm giờ, nộp bài tính điểm tổng kết"
+            title="Thi thử tính điểm và thời gian"
           >
-            ⏱️ Thi thử
+            <IconTimer size={15} />
+            <span>Thi thử</span>
           </button>
         </div>
 
         {/* Timer in Exam mode */}
         {mode === 'exam' && (
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              fontWeight: 800,
-              fontSize: '1.05rem',
-              color: 'var(--primary)',
-              background: 'var(--primary-light)',
-              padding: '0.35rem 0.75rem',
-              borderRadius: 'var(--radius-md)',
-              border: '1px solid var(--primary-border)',
-            }}
-          >
-            <span>⏳</span>
+          <div className="timer-badge">
+            <IconTimer size={14} />
             <span>{formatTimer(timerSeconds)}</span>
           </div>
         )}
 
-        {/* Actions */}
-        <div className="nav-actions">
-          {/* Shuffle toggle */}
+        {/* Header Tools */}
+        <div className="header-actions">
+          {/* Shuffle Button */}
           <button
-            className="btn-icon"
-            style={{
-              color: isShuffled ? 'var(--primary)' : 'var(--text-muted)',
-              borderColor: isShuffled ? 'var(--primary-border)' : 'var(--card-border)',
-            }}
+            className={`btn-icon-square ${isShuffled ? 'active' : ''}`}
             onClick={onToggleShuffle}
-            title={isShuffled ? 'Đang bật xáo trộn câu hỏi' : 'Xáo trộn ngẫu nhiên thứ tự câu'}
+            title={isShuffled ? 'Đang bật xáo trộn ngẫu nhiên' : 'Xáo trộn câu hỏi'}
+            aria-label="Xáo trộn câu hỏi"
           >
-            🔀
+            <IconShuffle size={16} />
           </button>
 
-          {/* History button */}
-          <button className="btn btn-secondary" onClick={onOpenHistoryModal} title="Xem lịch sử làm bài">
-            📊 Lịch sử
+          {/* History Button */}
+          <button
+            className="btn-pill desktop-only"
+            onClick={onOpenHistoryModal}
+            title="Lịch sử làm bài"
+          >
+            <IconHistory size={15} />
+            <span>Lịch sử</span>
           </button>
 
-          {/* User name button */}
-          <button className="btn btn-secondary" onClick={onOpenNameModal} title="Đổi tên của bạn">
-            👤 {userName || 'Nhập tên'}
+          <button
+            className="btn-icon-square mobile-only"
+            onClick={onOpenHistoryModal}
+            title="Lịch sử làm bài"
+            aria-label="Lịch sử làm bài"
+          >
+            <IconHistory size={16} />
           </button>
 
-          {/* Theme toggle */}
-          <button className="btn-icon" onClick={onToggleTheme} title="Chuyển chế độ Sáng / Tối">
-            {theme === 'dark' ? '☀️' : '🌙'}
+          {/* User Name */}
+          <button
+            className="btn-pill desktop-only"
+            onClick={onOpenNameModal}
+            title="Tên người làm"
+          >
+            <IconUser size={15} />
+            <span style={{ maxWidth: '90px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {userName || 'Nhập tên'}
+            </span>
+          </button>
+
+          {/* Theme Switcher */}
+          <button
+            className="btn-icon-square"
+            onClick={onToggleTheme}
+            title={theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+            aria-label="Chuyển chế độ giao diện"
+          >
+            {theme === 'dark' ? <IconSun size={16} /> : <IconMoon size={16} />}
           </button>
         </div>
       </div>

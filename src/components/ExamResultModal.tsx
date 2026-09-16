@@ -1,4 +1,12 @@
 import React from 'react';
+import {
+  IconTrophy,
+  IconCheckCircle,
+  IconX,
+  IconRefresh,
+  IconTimer,
+  IconAlertCircle,
+} from './icons';
 
 interface ExamResultModalProps {
   isOpen: boolean;
@@ -36,79 +44,95 @@ export const ExamResultModal: React.FC<ExamResultModalProps> = ({
     return `${mins} phút ${s} giây`;
   };
 
-  const getRating = (pct: number): { text: string; icon: string; color: string } => {
-    if (pct >= 90) return { text: 'Xuất sắc!', icon: '🏆', color: 'var(--success)' };
-    if (pct >= 80) return { text: 'Rất tốt!', icon: '🎉', color: 'var(--success)' };
-    if (pct >= 65) return { text: 'Đạt yêu cầu!', icon: '👍', color: 'var(--primary)' };
-    if (pct >= 50) return { text: 'Cần ôn thêm!', icon: '📚', color: 'var(--warning)' };
-    return { text: 'Chưa đạt, hãy luyện tập lại nhé!', icon: '💪', color: 'var(--danger)' };
+  const getRating = (pct: number): { text: string; color: string } => {
+    if (pct >= 90) return { text: 'Kết quả xuất sắc', color: 'var(--accent-success)' };
+    if (pct >= 80) return { text: 'Đạt kết quả tốt', color: 'var(--accent-success)' };
+    if (pct >= 65) return { text: 'Đạt yêu cầu', color: 'var(--accent-primary)' };
+    if (pct >= 50) return { text: 'Cần ôn luyện thêm', color: 'var(--accent-warning)' };
+    return { text: 'Chưa đạt yêu cầu', color: 'var(--accent-danger)' };
   };
 
   const rating = getRating(percentage);
+  const mistakesCount = totalQuestions - score;
 
   return (
-    <div className="modal-overlay" role="dialog" aria-modal="true">
-      <div className="modal-card" style={{ textAlign: 'center', maxWidth: '520px' }}>
-        <div style={{ fontSize: '3.5rem', lineHeight: 1 }}>{rating.icon}</div>
-        <h2
-          style={{
-            fontSize: '1.5rem',
-            fontWeight: 800,
-            color: 'var(--text-main)',
-            marginTop: '-0.5rem',
-          }}
-        >
-          {rating.text}
-        </h2>
-        {userName && (
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', marginTop: '-0.5rem' }}>
-            Chúc mừng <strong>{userName}</strong> đã hoàn thành bài thi!
-          </p>
-        )}
+    <div className="modal-backdrop" role="dialog" aria-modal="true">
+      <div className="modal-surface" style={{ textAlign: 'center', maxWidth: '480px' }}>
+        <div style={{ display: 'inline-flex', justifyContent: 'center', margin: '0 auto', color: rating.color }}>
+          <IconTrophy size={48} />
+        </div>
 
-        {/* Score Hero Box */}
-        <div className="score-hero">
-          <div className="score-number">
+        <div>
+          <h2
+            style={{
+              fontSize: '1.4rem',
+              fontWeight: 800,
+              color: 'var(--text-primary)',
+              letterSpacing: '-0.3px',
+            }}
+          >
+            {rating.text}
+          </h2>
+          {userName && (
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.2rem' }}>
+              Thí sinh: <strong>{userName}</strong>
+            </p>
+          )}
+        </div>
+
+        {/* Scorecard Showcase */}
+        <div className="score-showcase">
+          <div className="score-display">
             {grade10}
-            <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+            <span style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
               /10
             </span>
           </div>
-          <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '1.1rem' }}>
-            {score} / {totalQuestions} câu đúng ({percentage}%)
+          <div style={{ fontWeight: 700, color: 'var(--text-primary)', fontSize: '1rem' }}>
+            {score} / {totalQuestions} câu chính xác ({percentage}%)
           </div>
-          <div className="score-details">
-            <span>
-              ⏱️ Thời gian: <strong>{formatTime(timeSpentSeconds)}</strong>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '1.25rem',
+              marginTop: '0.5rem',
+              fontSize: '0.85rem',
+              color: 'var(--text-secondary)',
+            }}
+          >
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+              <IconTimer size={14} />
+              <span>{formatTime(timeSpentSeconds)}</span>
             </span>
-            <span>
-              ❌ Sai: <strong>{totalQuestions - score}</strong>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem', color: mistakesCount > 0 ? 'var(--accent-danger)' : undefined }}>
+              <IconAlertCircle size={14} />
+              <span>{mistakesCount} câu sai</span>
             </span>
           </div>
         </div>
 
-        {/* Action buttons */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginTop: '0.5rem' }}>
-          <button className="btn btn-primary" style={{ padding: '0.75rem 1rem' }} onClick={onReview}>
-            🔍 Xem chi tiết đáp án & giải thích
+        {/* Action Controls */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginTop: '0.5rem' }}>
+          <button className="btn-action btn-primary" onClick={onReview}>
+            <IconCheckCircle size={16} />
+            <span>Xem lại chi tiết bài làm</span>
           </button>
 
           {hasMistakes && (
             <button
-              className="btn btn-secondary"
-              style={{
-                padding: '0.75rem 1rem',
-                borderColor: 'var(--warning-border)',
-                color: 'var(--warning)',
-              }}
+              className="btn-action btn-secondary"
+              style={{ color: 'var(--accent-warning)', borderColor: 'var(--accent-warning-border)' }}
               onClick={onRetryMistakes}
             >
-              ⚡ Chỉ làm lại {totalQuestions - score} câu sai
+              <IconRefresh size={16} />
+              <span>Chỉ làm lại {mistakesCount} câu sai</span>
             </button>
           )}
 
-          <button className="btn btn-secondary" style={{ padding: '0.75rem 1rem' }} onClick={onRetry}>
-            🔄 Làm lại toàn bộ đề thi này
+          <button className="btn-action btn-secondary" onClick={onRetry}>
+            <IconRefresh size={16} />
+            <span>Làm lại toàn bộ đề thi</span>
           </button>
         </div>
       </div>

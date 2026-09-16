@@ -9,6 +9,13 @@ import { QuestionGrid } from './components/QuestionGrid';
 import { NameModal } from './components/NameModal';
 import { HistoryModal } from './components/HistoryModal';
 import { ExamResultModal } from './components/ExamResultModal';
+import {
+  IconArrowLeft,
+  IconArrowRight,
+  IconGrid,
+  IconCheckCircle,
+  IconX,
+} from './components/icons';
 
 export const App: React.FC = () => {
   const [selectedTestId, setSelectedTestId] = useState<string>('test-1');
@@ -21,6 +28,12 @@ export const App: React.FC = () => {
   const [answers, setAnswers] = useState<Record<string, UserAnswer>>({});
   const [isExamSubmitted, setIsExamSubmitted] = useState<boolean>(false);
   const [examScore, setExamScore] = useState<number>(0);
+
+  // Mistake practice state
+  const [isMistakePractice, setIsMistakePractice] = useState<boolean>(false);
+
+  // Mobile Bottom Sheet for question matrix
+  const [isMobileSheetOpen, setIsMobileSheetOpen] = useState<boolean>(false);
 
   // Timer
   const [timerSeconds, setTimerSeconds] = useState<number>(0);
@@ -63,13 +76,14 @@ export const App: React.FC = () => {
         const suite = TEST_SUITES.find((t) => t.id === testId);
         qs = suite ? suite.questions : TEST_SUITES[0]?.questions || [];
       }
+      setIsMistakePractice(false);
       setRawQuestions(qs);
       resetQuizState(qs, shuffle);
     },
     [isShuffled, resetQuizState]
   );
 
-  // Initial load
+  // Initial setup
   useEffect(() => {
     const storedName = getUserName();
     if (storedName) {
@@ -118,20 +132,59 @@ export const App: React.FC = () => {
       marked: false,
     };
 
+    // If already submitted in practice mode, do not allow changing without resetting
+    if (mode === 'practice' && existing.isSubmitted) return;
+
     let newSelected: string[];
-    if (currentQuestion.type === 'multiple') {
+    const isMulti = currentQuestion.type === 'multiple';
+
+    if (isMulti) {
+      // Multiple choice: toggle option without immediate submit in practice mode
       if (existing.selectedOptionIds.includes(optId)) {
         newSelected = existing.selectedOptionIds.filter((id) => id !== optId);
       } else {
         newSelected = [...existing.selectedOptionIds, optId];
       }
-    } else {
-      newSelected = [optId];
-    }
 
-    const correctIds = currentQuestion.options.filter((o) => o.isCorrect).map((o) => o.id).sort();
-    const chosenSorted = [...newSelected].sort();
-    const isCorrect =
+      setAnswers((prev) => ({
+        ...prev,
+        [qId]: {
+          ...existing,
+          selectedOptionIds: newSelected,
+          isSubmitted: false, // Wait for user to confirm "Kiểm tra đáp án"
+        },
+      }));
+    } else {
+      // Single choice
+      newSelected = [optId];
+      const correctOption = currentQuestion.options.find((o) => o.isCorrect);
+      const isRight = correctOption?.id === optId;
+
+      setAnswers((prev) => ({
+        ...prev,
+        [qId]: {
+          ...existing,
+          selectedOptionIds: newSelected,
+          isCorrect: isRight,
+          isSubmitted: mode === 'practice', // Single choice in practice evaluates immediately
+        },
+      }));
+    }
+  };
+
+  // Confirm answer for multi-choice in Practice Mode
+  const handleCheckMultiAnswer = () => {
+    if (!currentQuestion) return;
+    const qId = currentQuestion.id;
+    const existing = answers[qId];
+    if (!existing || existing.selectedOptionIds.length === 0) return;
+
+    const correctIds = currentQuestion.options
+      .filter((o) => o.isCorrect)
+      .map((o) => o.id)
+      .sort();
+    const chosenSorted = [...existing.selectedOptionIds].sort();
+    const isRight =
       correctIds.length === chosenSorted.length &&
       correctIds.every((val, idx) => val === chosenSorted[idx]);
 
@@ -139,9 +192,26 @@ export const App: React.FC = () => {
       ...prev,
       [qId]: {
         ...existing,
-        selectedOptionIds: newSelected,
-        isCorrect,
-        isSubmitted: mode === 'practice',
+        isCorrect: isRight,
+        isSubmitted: true,
+      },
+    }));
+  };
+
+  // Reset answer for current question to try again
+  const handleResetCurrentAnswer = () => {
+    if (!currentQuestion) return;
+    const qId = currentQuestion.id;
+    const existing = answers[qId];
+    if (!existing) return;
+
+    setAnswers((prev) => ({
+      ...prev,
+      [qId]: {
+        ...existing,
+        selectedOptionIds: [],
+        isSubmitted: false,
+        isCorrect: undefined,
       },
     }));
   };
@@ -293,11 +363,18 @@ export const App: React.FC = () => {
     setIsResultModalOpen(false);
     const mistakes = activeQuestions.filter((q) => answers[q.id]?.isCorrect === false);
     if (mistakes.length === 0) return;
+    setIsMistakePractice(true);
     setMode('practice');
     setActiveQuestions(mistakes);
     setCurrentIndex(0);
     setAnswers({});
     setIsExamSubmitted(false);
+  };
+
+  // Exit mistake practice
+  const handleExitMistakePractice = () => {
+    setIsMistakePractice(false);
+    loadTestQuestions(selectedTestId);
   };
 
   const handleSaveName = (name: string) => {
@@ -328,17 +405,20 @@ export const App: React.FC = () => {
   }, [currentIndex, activeQuestions, currentQuestion]);
 
   return (
-    <div className="app-layout">
+    <div className="app-container">
       {/* Navbar */}
       <Navbar
         testSuites={TEST_SUITES}
         selectedTestId={selectedTestId}
+        isMistakePractice={isMistakePractice}
+        mistakesCount={activeQuestions.length}
         mode={mode}
         userName={userName}
         isShuffled={isShuffled}
         theme={theme}
         timerSeconds={timerSeconds}
         onSelectTest={handleSelectTest}
+        onExitMistakePractice={handleExitMistakePractice}
         onSelectMode={handleSelectMode}
         onToggleShuffle={handleToggleShuffle}
         onOpenNameModal={() => setIsNameModalOpen(true)}
@@ -346,8 +426,8 @@ export const App: React.FC = () => {
         onToggleTheme={handleToggleTheme}
       />
 
-      {/* Main Quiz Area */}
-      <main className="main-content">
+      {/* Main Workspace (Split Cockpit layout) */}
+      <main className="workspace-grid">
         {currentQuestion ? (
           <QuestionCard
             question={currentQuestion}
@@ -357,6 +437,8 @@ export const App: React.FC = () => {
             mode={mode}
             isExamSubmitted={isExamSubmitted}
             onSelectOption={handleSelectOption}
+            onCheckMultiAnswer={handleCheckMultiAnswer}
+            onResetCurrentAnswer={handleResetCurrentAnswer}
             onToggleFlag={handleToggleFlag}
             onPrev={handlePrev}
             onNext={handleNext}
@@ -365,12 +447,12 @@ export const App: React.FC = () => {
             canNext={currentIndex < activeQuestions.length - 1}
           />
         ) : (
-          <div className="quiz-card" style={{ textAlign: 'center', padding: '3rem' }}>
+          <div className="stage-card" style={{ textAlign: 'center', padding: '3rem' }}>
             <p>Không tìm thấy câu hỏi nào.</p>
           </div>
         )}
 
-        {/* Sidebar Grid */}
+        {/* Desktop Sidebar Cockpit */}
         <QuestionGrid
           questions={activeQuestions}
           currentIndex={currentIndex}
@@ -380,6 +462,93 @@ export const App: React.FC = () => {
           onSelectIndex={(idx) => setCurrentIndex(idx)}
         />
       </main>
+
+      {/* Mobile Thumb-Friendly Bottom Navigation Bar */}
+      <nav className="mobile-bottom-bar mobile-only" aria-label="Điều hướng câu hỏi">
+        <button
+          className="btn-action btn-secondary"
+          style={{ padding: '0.5rem 0.85rem' }}
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+          aria-label="Câu trước"
+        >
+          <IconArrowLeft size={18} />
+          <span>Trước</span>
+        </button>
+
+        {/* Center Grid Trigger */}
+        <button
+          className="mobile-grid-trigger"
+          onClick={() => setIsMobileSheetOpen(true)}
+          aria-label="Mở bảng câu hỏi"
+        >
+          <IconGrid size={16} />
+          <span>
+            {currentIndex + 1} / {activeQuestions.length}
+          </span>
+          {answers[currentQuestion?.id || '']?.marked && (
+            <span style={{ color: 'var(--accent-warning)', fontSize: '0.8rem' }}>★</span>
+          )}
+        </button>
+
+        {mode === 'exam' && !isExamSubmitted ? (
+          <button
+            className="btn-action btn-success"
+            style={{ padding: '0.5rem 0.85rem' }}
+            onClick={handleSubmitExam}
+          >
+            <IconCheckCircle size={16} />
+            <span>Nộp</span>
+          </button>
+        ) : (
+          <button
+            className="btn-action btn-secondary"
+            style={{ padding: '0.5rem 0.85rem' }}
+            onClick={handleNext}
+            disabled={currentIndex === activeQuestions.length - 1}
+            aria-label="Câu tiếp theo"
+          >
+            <span>Sau</span>
+            <IconArrowRight size={18} />
+          </button>
+        )}
+      </nav>
+
+      {/* Mobile Bottom Sheet Drawer for Questions Matrix */}
+      {isMobileSheetOpen && (
+        <div
+          className="bottom-sheet-overlay mobile-only"
+          onClick={() => setIsMobileSheetOpen(false)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div className="bottom-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="sheet-handle"></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.5rem' }}>
+              <span style={{ fontWeight: 800, fontSize: '1rem' }}>Bảng số câu hỏi</span>
+              <button
+                className="btn-icon-square"
+                onClick={() => setIsMobileSheetOpen(false)}
+                aria-label="Đóng"
+              >
+                <IconX size={16} />
+              </button>
+            </div>
+            <QuestionGrid
+              questions={activeQuestions}
+              currentIndex={currentIndex}
+              answers={answers}
+              mode={mode}
+              isExamSubmitted={isExamSubmitted}
+              onSelectIndex={(idx) => {
+                setCurrentIndex(idx);
+                setIsMobileSheetOpen(false);
+              }}
+              isMobileDrawer={true}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Modals */}
       <NameModal
