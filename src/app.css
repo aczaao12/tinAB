@@ -9,12 +9,12 @@
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Theme Tokens - Light */
-  --bg-app: #f8fafc;
+  /* Theme Tokens - Light (Comfortable, soft neutral slate, no blinding glare) */
+  --bg-app: #f1f5f9;
   --bg-surface: #ffffff;
   --bg-surface-elevated: #ffffff;
-  --bg-surface-hover: #f1f5f9;
-  --bg-subtle: #f1f5f9;
+  --bg-surface-hover: #f8fafc;
+  --bg-subtle: #f8fafc;
   
   --border-subtle: #e2e8f0;
   --border-strong: #cbd5e1;
@@ -61,14 +61,15 @@
 }
 
 [data-theme="dark"] {
-  --bg-app: #090d16;
-  --bg-surface: #111726;
-  --bg-surface-elevated: #161e31;
-  --bg-surface-hover: #1c263c;
-  --bg-subtle: #161e31;
+  /* Theme Tokens - Dark (Comfortable slate charcoal, not pitch black) */
+  --bg-app: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-surface-elevated: #243048;
+  --bg-surface-hover: #293752;
+  --bg-subtle: #172133;
 
-  --border-subtle: #1e293b;
-  --border-strong: #334155;
+  --border-subtle: #29384d;
+  --border-strong: #3e5069;
   --border-focus: #3b82f6;
 
   --text-primary: #f8fafc;
@@ -1149,5 +1150,264 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ==========================================================================
+   WELCOME SCREEN STYLES (Dedicated PC Workstation Cockpit & Mobile-First Architecture)
+   ========================================================================== */
+.welcome-viewport {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   SHARED WELCOME ELEMENTS
+   -------------------------------------------------------------------------- */
+/* ==========================================================================
+   WELCOME SCREEN STYLES (Dedicated PC Cockpit & Mobile-First Architecture)
+   Optimized for density, zero filler spaces, zero meaningless descriptive text
+   ========================================================================== */
+.welcome-viewport {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* --------------------------------------------------------------------------
+   SHARED WELCOME ELEMENTS
+   -------------------------------------------------------------------------- */
+.welcome-theme-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-md);
+  font-size: 0.775rem;
+  font-weight: 600;
+  background-color: var(--bg-subtle);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.welcome-theme-btn:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-strong);
+}
+
+.welcome-section-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+}
+
+.welcome-test-card {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  text-align: left;
+  border: 1.5px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+  min-height: 60px;
+}
+
+.welcome-test-card:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-strong);
+}
+
+.welcome-test-card.is-active {
+  background-color: var(--accent-primary-subtle);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.welcome-mode-card {
+  width: 100%;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-md);
+  text-align: left;
+  border: 1.5px solid var(--border-subtle);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.15s ease;
+}
+
+.welcome-mode-card:hover {
+  background-color: var(--bg-surface-hover);
+  border-color: var(--border-strong);
+}
+
+.welcome-mode-card.is-active {
+  background-color: var(--accent-primary-subtle);
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+}
+
+.welcome-start-btn {
+  width: 100%;
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radius-md);
+  font-size: 0.925rem;
+  font-weight: 700;
+  background-color: var(--accent-primary);
+  color: var(--text-on-accent);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.25);
+  transition: all 0.15s ease;
+}
+
+.welcome-start-btn:hover {
+  background-color: var(--accent-primary-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+.welcome-start-btn:active {
+  transform: translateY(1px);
+}
+
+/* --------------------------------------------------------------------------
+   PC WORKSTATION COCKPIT (>= 1024px)
+   Ratio X > Y: Perfectly centered 2-column cockpit card, balanced height, zero empty space
+   -------------------------------------------------------------------------- */
+.welcome-pc-layout {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .welcome-mobile-layout {
+    display: none !important;
+  }
+
+  .welcome-pc-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 980px;
+    margin: auto;
+    padding: 1.5rem;
+    box-sizing: border-box;
+  }
+
+  .welcome-pc-card {
+    background-color: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .welcome-pc-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .welcome-pc-grid {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    align-items: stretch;
+  }
+
+  .welcome-pc-sidebar {
+    padding: 1.25rem;
+    border-right: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+    background-color: var(--bg-subtle);
+  }
+
+  .welcome-pc-main {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .welcome-pc-test-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.65rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE-FIRST LAYOUT (< 1024px)
+   Ratio Y > X: Streamlined vertical flow, zero redundant text, compact controls
+   -------------------------------------------------------------------------- */
+.welcome-mobile-layout {
+  display: block;
+  width: 100%;
+  padding-bottom: 75px;
+}
+
+.welcome-mobile-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background-color: var(--bg-surface);
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0.65rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.welcome-mobile-body {
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.welcome-mobile-bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  padding: 0.5rem 0.85rem max(0.5rem, env(safe-area-inset-bottom)) 0.85rem;
+  z-index: 50;
+  box-shadow: 0 -3px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
